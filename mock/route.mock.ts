@@ -1,9 +1,20 @@
+import path from 'path';
 import { defineFakeRoute } from 'vite-plugin-fake-server/client';
 
 const power = [
   {
     path: '/welcome',
     name: 'RtWelcome',
+  },
+  {
+    path: '/status',
+    name: 'RtStatus',
+    children: [
+      {
+        path: 'form',
+        name: 'RtForm',
+      },
+    ],
   },
   {
     path: '/components',
@@ -77,6 +88,10 @@ const power = [
         name: 'RtLogicFlow',
       },
     ],
+  },
+  {
+    path: 'myecharts',
+    name: 'RtMyEcharts',
   },
 ];
 

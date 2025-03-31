@@ -45,7 +45,7 @@
     "@logicflow/core": "^2.0.9",
     "@logicflow/extension": "^2.0.13",
     "@vueuse/core": "^12.0.0",
-    "axios": "^1.7.9",
+    "axios": "^1.8.4",
     "commitlint": "19.6.0",
     "dayjs": "^1.11.13",
     "docx-preview": "^0.3.3",

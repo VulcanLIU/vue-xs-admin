@@ -12,7 +12,7 @@
   }>();
 
   const emit = defineEmits<{
-    (e: 'submitForm', form: T): boolean;
+    (e: 'submitForm', form: T): void;
   }>();
 
   defineSlots<FormSlotType<T>>();
