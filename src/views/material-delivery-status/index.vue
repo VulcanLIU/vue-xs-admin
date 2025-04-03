@@ -3,11 +3,9 @@
   import axios from 'axios';
   import { computed, h, onMounted, ref } from 'vue';
   import type { TableColumnProps } from '@/components/Table/types/table';
-
   defineOptions({
     name: 'RtStatus',
   });
-
   ///进度卡片显示Speedlist
   const speedList = ref([
     {
@@ -21,7 +19,6 @@
       total: 100,
     },
   ]);
-
   ///表格
   //定义该表格中的数据内容
   interface TableData {
@@ -125,39 +122,75 @@
     index: string;
     product_name: string;
     product_number: string;
-    children: PartItem[];
+    children?: ProductItem[];
   }
-  const nesting_tabList = ref<ProductItem[]>([]);
+  interface TableData1 {
+    date: string;
+    name: string;
+    address: string;
+    children?: TableData1[];
+  }
+  const nesting_tabList = ref<ProductItem[]>([
+    {
+      index: '1',
+      product_name: '成品A',
+      product_number: 'A',
+      children: [
+        {
+          index: '1',
+          product_name: '成品A',
+          product_number: 'A',
+        },
+      ],
+    },
+    {
+      date: '2016-05-02',
+      name: 'Tom',
+      address: 'No. 189, Grove St, Los Angeles',
+    },
+    {
+      date: '2016-05-04',
+      name: 'Tom',
+      address: 'No. 189, Grove St, Los Angeles',
+      children: [
+        {
+          date: '2016-05-05',
+          name: 'Tom',
+          address: 'No. 189, Grove St, Los Angeles',
+        },
+        {
+          date: '2016-05-06',
+          name: 'Tom',
+          address: 'No. 189, Grove St, Los Angeles',
+        },
+      ],
+    },
+    {
+      date: '2016-05-01',
+      name: 'Tom',
+      address: 'No. 189, Grove St, Los Angeles',
+    },
+  ]);
   //定义嵌套表格的结构
-  const nestingOption: TableColumnProps<TableData>[] = [
+  const nestingOption: TableColumnProps<ProductItem>[] = [
     {
       type: 'expand',
       render: (slotData: any) => {
         const ngOption = [
           {
-            label: '物料编码',
-            prop: 'part_serial_number',
+            label: '序号',
+            prop: 'index',
+            sortable: true,
+          },
+          {
+            label: '产品名称',
+            prop: 'product_name',
             isSlots: true,
           },
           {
-            label: '零件图号',
-            prop: 'part_number',
-            sortable: true,
-          },
-          {
-            label: '零件名称',
-            prop: 'part_name',
-            sortable: true,
-          },
-          {
-            label: '申报批次',
-            prop: 'declared_Batch',
-            sortable: true,
-          },
-          {
-            label: '到货状态',
-            prop: 'arrival_status',
-            sortable: true,
+            label: '产品图号',
+            prop: 'product_number',
+            isSlots: true,
           },
         ];
         return (
@@ -175,30 +208,14 @@
     {
       label: '产品名称',
       prop: 'product_name',
-      sortable: true,
+      isSlots: true,
     },
     {
       label: '产品图号',
       prop: 'product_number',
       isSlots: true,
     },
-    {
-      label: '零件完备率',
-      prop: 'part_arrival_rate',
-      isSlots: true,
-    },
-    {
-      label: '工装完备率',
-      prop: 'tooling_arrival_rate',
-      isSlots: true,
-    },
-    {
-      label: '可维修状态',
-      prop: 'repairable_status',
-      isSlots: true,
-    },
   ];
-
   ///获取数据
   //定义接口返回的原始数据类型
   interface RawData {
@@ -219,10 +236,8 @@
   //数据匹配-将扁平数据转化为树形数据
   const transformData = (rawData: RawData[]): ProductItem[] => {
     const productMap = new Map<string, ProductItem>();
-
     rawData.forEach(item => {
       const productKey = `${item.所属产品名称}`;
-
       if (!productMap.has(productKey)) {
         productMap.set(productKey, {
           index: String(productMap.size + 1),
@@ -231,7 +246,6 @@
           children: [],
         });
       }
-
       productMap.get(productKey)?.children.push({
         index: item.序号,
         part_serial_number: item.清单编号,
@@ -240,14 +254,13 @@
         declared_Batch: item.申报批次,
       });
     });
-
     return Array.from(productMap.values());
   };
   //API调用函数
   const fetchData = async () => {
     try {
       const response = await axios.get('http://localhost:5000/api/perchase_data');
-      nesting_tabList.value = transformData(response.data.data);
+      //nesting_tabList.value = transformData(response.data.data);
       tabList.value = response.data.data.map((item: RawData) => ({
         index: item.序号,
         part_serial_number: item.清单编号,
@@ -267,24 +280,20 @@
       console.error('数据获取失败:', error);
     }
   };
-
   //页面初始化自动装载fetchData()函数
   onMounted(() => {
     fetchData();
   });
-
   //进度数据自动计算
   const statistics = computed(() => {
     const total = tabList.value.length;
     const qualified = tabList.value.filter(item => item.arrival_status === '是').length;
-
     return { total, qualified };
   });
   const value = (online: number, total: number) => {
     return Math.round((online / total) * 100);
   };
 </script>
-
 <template>
   <div>
     <!--进度卡片-->
@@ -316,7 +325,6 @@
               <span>表格</span>
             </div>
           </template>
-
           <Table :data="tabList" border row-key="index" :option="option">
             <template #name_header="slotData">
               <span>{{ `插槽：${slotData.customItem.label}` }}</span>
@@ -335,7 +343,7 @@
           <span>嵌套表格</span>
         </div>
       </template>
-      <Table :data="nesting_tabList" border row-key="index" :option="nestingOption">
+      <Table :data="nesting_tabList" border row-key="date" :option="nestingOption">
         <template #name_header="slotData">
           <span>{{ `插槽：${slotData.customItem.label}` }}</span>
         </template>
@@ -346,34 +354,28 @@
     </el-card>
   </div>
 </template>
-
 <style lang="scss" scoped>
   .box-card {
     margin-bottom: 20px;
-
     :deep(.el-card__header) {
       padding-bottom: 0;
       border: none;
     }
-
     .card-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
       font-weight: 600;
     }
-
     .card-content {
       :deep(.el-progress-bar__outer) {
         height: 17px !important;
       }
-
       .numerical-value {
         display: flex;
         align-items: flex-end;
         justify-content: space-between;
         margin-bottom: 10px;
-
         .number {
           color: var(--text-color-primary);
           font-size: var(--font-size-extra-large);
