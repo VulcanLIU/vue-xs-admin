@@ -122,80 +122,37 @@
     index: string;
     product_name: string;
     product_number: string;
-    children?: ProductItem[];
+    children?: PartItem[];
   }
-  interface TableData1 {
-    date: string;
-    name: string;
-    address: string;
-    children?: TableData1[];
-  }
-  const nesting_tabList = ref<ProductItem[]>([
-    {
-      index: '1',
-      product_name: '成品A',
-      product_number: 'A',
-      children: [
-        {
-          index: '1',
-          product_name: '成品A',
-          product_number: 'A',
-        },
-      ],
-    },
-    {
-      date: '2016-05-02',
-      name: 'Tom',
-      address: 'No. 189, Grove St, Los Angeles',
-    },
-    {
-      date: '2016-05-04',
-      name: 'Tom',
-      address: 'No. 189, Grove St, Los Angeles',
-      children: [
-        {
-          date: '2016-05-05',
-          name: 'Tom',
-          address: 'No. 189, Grove St, Los Angeles',
-        },
-        {
-          date: '2016-05-06',
-          name: 'Tom',
-          address: 'No. 189, Grove St, Los Angeles',
-        },
-      ],
-    },
-    {
-      date: '2016-05-01',
-      name: 'Tom',
-      address: 'No. 189, Grove St, Los Angeles',
-    },
-  ]);
+  const nesting_tabList = ref<ProductItem[]>([]);
   //定义嵌套表格的结构
   const nestingOption: TableColumnProps<ProductItem>[] = [
     {
       type: 'expand',
       render: (slotData: any) => {
-        const ngOption = [
+        const ngOption: TableColumnProps<PartItem>[] = [
           {
             label: '序号',
             prop: 'index',
             sortable: true,
           },
           {
-            label: '产品名称',
-            prop: 'product_name',
-            isSlots: true,
+            label: '物料编码',
+            prop: 'part_serial_number',
+            sortable: true,
           },
           {
-            label: '产品图号',
-            prop: 'product_number',
-            isSlots: true,
+            label: '零件名称',
+            prop: 'part_name',
+          },
+          {
+            label: '零件图号',
+            prop: 'part_number',
           },
         ];
         return (
           <div style={{ padding: '0 8px' }}>
-            <Table data={[slotData.row]} border option={ngOption}></Table>
+            <Table data={slotData.row.children || []} border option={ngOption}></Table>
           </div>
         );
       },
@@ -208,12 +165,10 @@
     {
       label: '产品名称',
       prop: 'product_name',
-      isSlots: true,
     },
     {
       label: '产品图号',
       prop: 'product_number',
-      isSlots: true,
     },
   ];
   ///获取数据
@@ -260,7 +215,7 @@
   const fetchData = async () => {
     try {
       const response = await axios.get('http://localhost:5000/api/perchase_data');
-      //nesting_tabList.value = transformData(response.data.data);
+      nesting_tabList.value = transformData(response.data.data);
       tabList.value = response.data.data.map((item: RawData) => ({
         index: item.序号,
         part_serial_number: item.清单编号,
@@ -343,7 +298,7 @@
           <span>嵌套表格</span>
         </div>
       </template>
-      <Table :data="nesting_tabList" border row-key="date" :option="nestingOption">
+      <Table :data="nesting_tabList" border row-key="index" :option="nestingOption">
         <template #name_header="slotData">
           <span>{{ `插槽：${slotData.customItem.label}` }}</span>
         </template>
