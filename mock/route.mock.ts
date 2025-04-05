@@ -7,6 +7,10 @@ const power = [
     name: 'RtWelcome',
   },
   {
+    path: '/3d_model_view',
+    name: 'Rt3dModelView',
+  },
+  {
     path: '/status',
     name: 'RtStatus',
     children: [
