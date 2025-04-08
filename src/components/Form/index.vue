@@ -14,6 +14,7 @@
   //定义
   const emit = defineEmits<{
     (e: 'submitForm', form: T): boolean;
+    (e: 'resetForm', form: T): boolean;
   }>();
 
   defineSlots<FormSlotType<T>>();
@@ -37,7 +38,9 @@
     emit('submitForm', shallowRef(form).value);
   };
 
-  const resetForm = () => {};
+  const resetForm = () => {
+    emit('resetForm', shallowRef(form).value);
+  };
 
   defineExpose({
     form,

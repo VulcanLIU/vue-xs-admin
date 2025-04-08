@@ -77,11 +77,19 @@
   const submitForm = (value: FormDataType) => {
     emit('submitForm', shallowRef(value).value);
   };
+
+  const resetForm = (value: FormDataType) => {
+    for (const item in form.value) {
+      form.value[item] = '';
+      //console.log(item);
+    }
+    emit('submitForm', shallowRef(value).value);
+  };
 </script>
 
 <template>
   <div class="page-container">
-    <Form ref="formRef" :form-data="form" :form-option="formOption" @submit-form="submitForm" />
+    <Form ref="formRef" :form-data="form" :form-option="formOption" @submit-form="submitForm" @reset-form="resetForm" />
   </div>
 </template>
 

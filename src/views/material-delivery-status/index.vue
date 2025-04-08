@@ -27,99 +27,9 @@
     },
   ]);
 
+  ///全部数据
+  let raw_data = ref('');
   ///表格
-  //|-扁平表格
-  //-|-扁平表格内容结构-定义该表格中的列名数据结构
-  interface TableData {
-    index: string; //序号
-    part_serial_number: string; //零件清单编号
-    part_name: string; //零件名称
-    part_number: string; //零件图号
-    part_arrival_rate: string; //零件完备率
-    product_name: string; //产品名称
-    product_number: string; //产品图号
-    unit: string; //单位
-    quantity: number; //数量
-    manufacturer: string; //制造厂商
-    purchasing_manager: string; //负责人
-    per_quantity: number; //单机数量
-    arrival_status: string; //到货状态
-    declared_Batch: string; //申报批次
-    repairable_status: string; //可维修状态
-    tooling_arrival_rate: string; //工装完备率
-    children?: TableData[];
-  }
-  //-|-扁平表格格式定义-option
-  const option: TableColumnProps<TableData>[] = [
-    {
-      label: '序号',
-      prop: 'index',
-      sortable: true,
-    },
-    {
-      label: '物料编码',
-      prop: 'part_serial_number',
-      sortable: true,
-    },
-    {
-      label: '名称',
-      prop: 'part_name',
-      sortable: true,
-    },
-    {
-      label: '图号',
-      prop: 'part_number',
-      sortable: true,
-    },
-    {
-      label: '单位',
-      prop: 'unit',
-      sortable: true,
-    },
-    {
-      label: '数量',
-      prop: 'quantity',
-      sortable: true,
-    },
-    {
-      label: '产品名称',
-      prop: 'product_name',
-      sortable: true,
-    },
-    {
-      label: '产品图号',
-      prop: 'product_number',
-      sortable: true,
-    },
-    {
-      label: '申报批次',
-      prop: 'declared_Batch',
-      sortable: true,
-    },
-    {
-      label: '制造厂商',
-      prop: 'manufacturer',
-      sortable: true,
-    },
-    {
-      label: '负责人',
-      prop: 'purchasing_manager',
-      sortable: true,
-    },
-    {
-      label: '单机数量',
-      prop: 'per_quantity',
-      sortable: true,
-    },
-    {
-      label: '到货状态',
-      prop: 'arrival_status',
-      sortable: true,
-    },
-  ];
-  //-|-扁平表格内容声明
-  const tabList = ref<TableData[]>([]);
-
   //|-嵌套表格
   //-|-嵌套表内容结构接口
   interface PartItem {
@@ -243,28 +153,35 @@
   //|-数据获取-API调用函数
   const fetchData = async (args: string = '') => {
     try {
+      //-|-使用API获取数据
       const response = await axios.get(`http://localhost:5000/api/perchase_data${args}`);
+      //-|-如果API无传入数据则是在索取全部数据-保存在raw_data变量中
+      const _data = ref(response.data.data);
       if (args === '') {
-        raw_nesting_tabList.value = transformData(response.data.data);
+        raw_data = _data;
+        raw_nesting_tabList.value = transformData(_data.value);
       }
-      nesting_tabList.value = transformData(response.data.data);
+      nesting_tabList.value = transformData(_data.value);
     } catch (error) {
       console.error('数据获取失败:', error);
     }
   };
 
   const value = (online: number, total: number) => {
+    if (online === 0 && total === 0) {
+      return 0;
+    }
     return Math.round((online / total) * 100);
   };
   //|-数据计算-进度数据自动计算
   const statistics = computed(() => {
     //-|-新建一个盛放结果的数组
     const rateArray: number[] = new Array(nesting_tabList.value.length);
-    //-|-循环读取嵌套表格中的条目
+    //--|-循环读取嵌套表格中的条目
     let total = 0;
     let arrival_status_couter = 0;
     for (const key in nesting_tabList.value) {
-      //--|-对每个条目下总数与“是”进行单独计数
+      //---|-对每个条目下总数与“是”进行单独计数
       total = nesting_tabList.value[key].children.length;
       arrival_status_couter = 0;
       for (const child_item in nesting_tabList.value[key].children) {
@@ -273,13 +190,40 @@
           arrival_status_couter++;
         }
       }
-      //--|-将计算结果添加到数组中
+      //---|-将计算结果添加到数组中
       rateArray[key] = value(arrival_status_couter, total);
-      console.log(total, arrival_status_couter, rateArray[key]);
+      //console.log(total, arrival_status_couter, rateArray[key]);
     }
-    const total_all = tabList.value.length;
-    const qualified = tabList.value.filter(item => item.arrival_status === '是').length;
-    return { total_all, qualified, rateArray };
+    //-|-计算物料到货率
+    let total_part = 0;
+    let qualified_part = 0;
+    if (raw_data.value !== '') {
+      total_part = raw_data.value.length;
+      qualified_part = raw_data.value.filter(item => item?.是否到货 === '是').length;
+    }
+
+    //-|-计算附件可修率
+    //--|-新建一个盛放结果的数组
+    const rateArray_all: number[] = new Array(raw_nesting_tabList.value.length);
+    //--|-循环读取嵌套表格中的条目
+    let total_product_num = 0;
+    let total_arrival_status_couter = 0;
+    for (const key in raw_nesting_tabList.value) {
+      //---|-对每个条目下总数与“是”进行单独计数
+      total_product_num = raw_nesting_tabList.value[key].children.length;
+      total_arrival_status_couter = 0;
+      for (const child_item in raw_nesting_tabList.value[key].children) {
+        if (raw_nesting_tabList.value[key].children[child_item].arrival_status === '是') {
+          total_arrival_status_couter++;
+        }
+      }
+      //---|-将计算结果添加到数组中
+      rateArray_all[key] = value(total_arrival_status_couter, total_product_num);
+    }
+    //--|-挑选出rate为100的条目
+    const total_product = rateArray_all.length;
+    const qualified_product = rateArray_all.filter(item => item?.valueOf() === 100).length;
+    return { total_part, qualified_part, total_product, qualified_product, rateArray };
   });
 
   //|-数据检索
@@ -305,9 +249,9 @@
   });
 </script>
 <template>
-  <div>
+  <div class="enter-y">
     <!--进度卡片-->
-    <el-row :gutter="20" class="enter-y">
+    <el-row :gutter="20">
       <el-col v-for="(item, index) in speedList_1" :key="index" :xs="24" :sm="24" :md="6" :lg="6" :xl="6">
         <el-card class="box-card">
           <template #header>
@@ -318,10 +262,14 @@
           </template>
           <div class="card-content">
             <div class="numerical-value">
-              <span class="number">{{ statistics.qualified }}/{{ statistics.total_all }}</span>
+              <span class="number">{{ statistics.qualified_product }}/{{ statistics.total_product }}</span>
               <span>可修/总数</span>
             </div>
-            <el-progress :text-inside="true" :stroke-width="26" :percentage="value(item.online, item.total)" />
+            <el-progress
+              :text-inside="true"
+              :stroke-width="26"
+              :percentage="value(statistics.qualified_product, statistics.total_product)"
+            />
           </div>
         </el-card>
       </el-col>
@@ -335,10 +283,14 @@
           </template>
           <div class="card-content">
             <div class="numerical-value">
-              <span class="number">{{ statistics.qualified }}/{{ statistics.total_all }}</span>
+              <span class="number">{{ statistics.qualified_part }}/{{ statistics.total_part }}</span>
               <span>到货/总数</span>
             </div>
-            <el-progress :text-inside="true" :stroke-width="26" :percentage="value(item.online, item.total)" />
+            <el-progress
+              :text-inside="true"
+              :stroke-width="26"
+              :percentage="value(statistics.qualified_part, statistics.total_part)"
+            />
           </div>
         </el-card>
       </el-col>
