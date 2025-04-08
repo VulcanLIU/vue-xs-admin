@@ -1,6 +1,5 @@
 <script setup>
   import { ArrowLeft, ArrowRight } from '@element-plus/icons-vue';
-  import ElementPlus from 'element-plus';
   import { ref } from 'vue';
   defineOptions({
     name: 'Rt3dModelView',

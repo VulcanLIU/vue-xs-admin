@@ -33,7 +33,15 @@
         return h('span', {}, `render_header：${slotData.customItem.label}`);
       },
       render: (slotData: any) => {
-        return h('span', {}, `render：${slotData.row.address}`);
+        // 渲染按钮组件
+        return h(
+          'el-button',
+          {
+            type: 'primary', // 按钮类型
+            size: 'small', // 按钮尺寸
+          },
+          `查看地址：${slotData.row.address}`, // 按钮文本
+        );
       },
     },
   ];
@@ -133,7 +141,7 @@
           <span>{{ `插槽：${slotData.customItem.label}` }}</span>
         </template>
         <template #name="slotData">
-          <span>{{ slotData.row.name }}</span>
+          <el-button>{{ slotData.row.name }}</el-button>
         </template>
       </Table>
     </el-card>

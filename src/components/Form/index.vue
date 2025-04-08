@@ -11,6 +11,7 @@
     rules?: Partial<Record<string, Arrayable<FormItemRule>>>;
   }>();
 
+  //定义
   const emit = defineEmits<{
     (e: 'submitForm', form: T): boolean;
   }>();
@@ -44,7 +45,7 @@
 </script>
 
 <template>
-  <div>
+  <div class="component-a">
     <el-form ref="form-ref" :rules="rules" :model="form" :label-position="formOption.labelPosition" label-width="120px">
       <el-row v-for="(f, fix) in formOption.formItem" :key="fix" :gutter="f.gutter || 30">
         <el-col
@@ -62,11 +63,20 @@
             </template>
           </FormItem>
         </el-col>
+        <el-col :span="6">
+          <el-button type="primary" @click="submitForm()"> 查找 </el-button>
+          <el-button @click="resetForm()"> 重置 </el-button>
+        </el-col>
       </el-row>
-      <el-form-item>
-        <el-button type="primary" @click="submitForm()"> Create </el-button>
-        <el-button @click="resetForm()"> Reset </el-button>
-      </el-form-item>
     </el-form>
   </div>
 </template>
+
+<style scoped>
+  /* 按钮容器列 */
+  .button-col {
+    display: flex;
+    justify-content: flex-end; /* 右对齐 */
+    align-items: center; /* 垂直居中 */
+  }
+</style>
