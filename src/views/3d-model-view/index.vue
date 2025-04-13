@@ -63,7 +63,7 @@
       >
         <!-- 卡片内容插槽 -->
         <div class="card-content">
-          <DView />
+          <DView class="parent-container" />
         </div>
       </div>
     </transition-group>
@@ -81,6 +81,14 @@
 </template>
 
 <style scoped>
+  .parent-container {
+    position: relative;
+    margin-left: 10px auto;
+    margin-right: 10px auto;
+    scroll-margin: 10px auto;
+    width: 90%;
+  }
+
   .card-carousel-container {
     position: relative;
     max-width: 100%;

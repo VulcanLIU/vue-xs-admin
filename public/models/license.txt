@@ -1,0 +1,11 @@
+Model Information:
+* title:	Chengdu J-20 fighter V2
+* source:	https://sketchfab.com/3d-models/chengdu-j-20-fighter-v2-25a19462c08c4e7595302c5dc5395784
+* author:	Miopass (https://sketchfab.com/miopass)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Chengdu J-20 fighter V2" (https://sketchfab.com/3d-models/chengdu-j-20-fighter-v2-25a19462c08c4e7595302c5dc5395784) by Miopass (https://sketchfab.com/miopass) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

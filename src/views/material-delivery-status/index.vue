@@ -311,6 +311,7 @@
     </el-card>
   </div>
 </template>
+
 <style lang="scss" scoped>
   .box-card {
     margin-bottom: 20px;
