@@ -1,6 +1,7 @@
-<script setup>
+<script setup lang="ts">
   import { ArrowLeft, ArrowRight } from '@element-plus/icons-vue';
-  import { ref } from 'vue';
+  import { onMounted, ref } from 'vue';
+  import DView from './components-3D/index.vue';
   defineOptions({
     name: 'Rt3dModelView',
   });
@@ -21,15 +22,6 @@
         { name: '李四', age: 30, email: 'lisi@example.com' },
       ],
     },
-    {
-      id: 2,
-      title: '自定义内容',
-      type: 'custom',
-      data: {
-        text: '这里可以放任何自定义内容',
-        image: 'https://example.com/image.jpg',
-      },
-    },
   ]);
 
   const currentIndex = ref(0);
@@ -42,6 +34,10 @@
   const nextCard = () => {
     if (currentIndex.value < cards.value.length - 1) currentIndex.value++;
   };
+
+  onMounted(async () => {
+    DView.onMounted();
+  });
 </script>
 
 <template>
@@ -67,15 +63,7 @@
       >
         <!-- 卡片内容插槽 -->
         <div class="card-content">
-          <h3>{{ card.title }}</h3>
-
-          <!-- 表格示例 -->
-          <el-table v-if="card.type === 'table'" :data="card.data" style="width: 100%">
-            <el-table-column v-for="col in card.columns" :key="col.prop" :prop="col.prop" :label="col.label" />
-          </el-table>
-
-          <!-- 自定义内容 -->
-          <slot v-else name="card-content" :data="card.data" />
+          <DView />
         </div>
       </div>
     </transition-group>
@@ -95,7 +83,8 @@
 <style scoped>
   .card-carousel-container {
     position: relative;
-    max-width: 800px;
+    max-width: 100%;
+    height: 100%;
     margin: 20px auto;
     overflow: hidden;
   }
@@ -112,12 +101,14 @@
 
   .card-wrapper {
     display: flex;
+    height: 100%;
     transition: transform 0.3s ease;
   }
 
   .card-item {
     flex: 0 0 100%;
     padding: 20px;
+    height: 100%;
     box-sizing: border-box;
     transition: all 0.3s ease;
   }
@@ -128,11 +119,13 @@
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
     padding: 20px;
     min-height: 300px;
+    height: 100%;
   }
 
   .indicators {
     text-align: center;
     margin-top: 15px;
+    height: 100%;
   }
 
   .indicators span {
