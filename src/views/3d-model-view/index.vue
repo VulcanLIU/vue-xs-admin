@@ -83,10 +83,6 @@
 <style scoped>
   .parent-container {
     position: relative;
-    margin-left: 10px auto;
-    margin-right: 10px auto;
-    scroll-margin: 10px auto;
-    width: 90%;
   }
 
   .card-carousel-container {
