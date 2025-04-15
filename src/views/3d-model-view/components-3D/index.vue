@@ -2,7 +2,6 @@
   import * as THREE from 'three';
   import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
   import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-  import { CSS2DObject, CSS2DRenderer } from 'three/addons/renderers/CSS2DRenderer.js';
   import { onMounted, onUnmounted, ref } from 'vue';
 
   // DOM 容器引用（只有 DOM 元素需要 ref）
@@ -12,7 +11,6 @@
   let scene = null;
   let camera = null;
   let renderer = null;
-  let css2Renderer = null;
   let controls = null;
 
   // 初始化场景
@@ -29,14 +27,6 @@
     renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, premultipliedAlpha: false });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.shadowMap.enabled = true;
-
-    // CSS2D 渲染器（关键修正）
-    // css2Renderer = new CSS2DRenderer();
-    // css2Renderer.setSize(window.innerWidth, window.innerHeight);
-    // css2Renderer.domElement.style.position = 'absolute';
-    // css2Renderer.domElement.style.top = '0';
-    // css2Renderer.domElement.style.pointerEvents = 'none'; // 防止阻挡交互
-    // document.body.appendChild(css2Renderer.domElement);
 
     // 4. 添加控制器
     controls = new OrbitControls(camera, renderer.domElement);
@@ -84,11 +74,6 @@
         });
         scene.add(model);
 
-        // HTML元素转化为threejs的CSS2模型对象
-        const div = document.getElementById('tag');
-        const tag = new CSS2DObject(div);
-        tag.position.set(0, 1, 0);
-        model.add(tag);
         // 自动聚焦模型
         const box = new THREE.Box3().setFromObject(model);
         const center = box.getCenter(new THREE.Vector3());
@@ -108,7 +93,6 @@
     requestAnimationFrame(animate);
     controls.update();
     renderer.render(scene, camera);
-    css2Renderer.render(scene, camera);
   };
 
   // 窗口大小调整
@@ -128,9 +112,6 @@
 
   onUnmounted(() => {
     window.removeEventListener('resize', onWindowResize);
-    // 清理 CSS2D 渲染器
-    document.body.removeChild(css2Renderer.domElement);
-    css2Renderer = null;
     // 清理资源
     renderer.dispose();
     scene.traverse(obj => {
