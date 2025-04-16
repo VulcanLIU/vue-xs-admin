@@ -35,9 +35,7 @@
     if (currentIndex.value < cards.value.length - 1) currentIndex.value++;
   };
 
-  onMounted(async () => {
-    DView.onMounted();
-  });
+  onMounted(async () => {});
 </script>
 
 <template>
@@ -63,7 +61,7 @@
       >
         <!-- 卡片内容插槽 -->
         <div class="card-content">
-          <DView class="parent-container" />
+          <DView />
         </div>
       </div>
     </transition-group>

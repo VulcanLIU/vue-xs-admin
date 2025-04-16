@@ -19,7 +19,7 @@
     const canvass = container.value;
     const parentDiv = parentRef.value;
 
-    const { width, height } = getParentSize(); // 使用父容器尺寸
+    const { width, height } = parentRef.value.getBoundingClientRect(); // 使用父容器尺寸
 
     // 1. 创建场景
     scene = new THREE.Scene();
@@ -97,31 +97,40 @@
     renderer.render(scene, camera);
   };
 
-  // 窗口大小调整
-  const onWindowResize = () => {
-    const { width, height } = getParentSize();
-    camera.aspect = width / height;
-    camera.updateProjectionMatrix();
-    renderer.setSize(width, height);
+  // 尺寸变化处理函数
+  const handleResize = () => {
+    if (parentRef.value) {
+      const { width, height } = parentRef.value.getBoundingClientRect();
+      console.log(`Div size changed:width:${width}|height:${height}`);
+      // 在这里可以添加其他逻辑，比如更新 Three.js 的尺寸
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+      renderer.setSize(width, height);
+    }
   };
 
-  const getParentSize = () => {
-    return {
-      width: parentRef.value.clientWidth,
-      height: parentRef.value.clientHeight,
-    };
-  };
+  // 初始化 ResizeObserver
+  let resizeObserver = null;
 
   // 生命周期钩子
   onMounted(() => {
     initScene();
     animate();
-    window.addEventListener('resize', onWindowResize);
+
+    if (parentRef.value) {
+      resizeObserver = new ResizeObserver(() => {
+        handleResize();
+      });
+      resizeObserver.observe(parentRef.value);
+
+      // 初始调用一次
+      handleResize();
+    }
   });
 
   onUnmounted(() => {
     cancelAnimationFrame(animationFrameId); // 停止动画循环
-    window.removeEventListener('resize', onWindowResize);
+
     // 清理资源
     controls.dispose();
     renderer.dispose();
@@ -131,6 +140,9 @@
         obj.material.dispose();
       }
     });
+    if (resizeObserver) {
+      resizeObserver.disconnect();
+    }
   });
 </script>
 
@@ -141,8 +153,8 @@
 </script>
 
 <template>
-  <div id="three-container" ref="parentRef">
-    <canvas id="can" ref="container" />
+  <div ref="parentRef" class="three-container">
+    <canvas ref="container" class="can" />
   </div>
 </template>
 
