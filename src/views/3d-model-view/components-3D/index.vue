@@ -157,7 +157,13 @@
     <canvas id="can" ref="container" />
 
     <div id="content">
-      <h1>Beautiful Cubes</h1>
+      <div class="demo-progress">
+        <el-progress :percentage="50" />
+        <el-progress :percentage="100" :format="format" />
+        <el-progress :percentage="100" status="success" />
+        <el-progress :percentage="100" status="warning" />
+        <el-progress :percentage="50" status="exception" />
+      </div>
     </div>
   </div>
 </template>
@@ -168,6 +174,12 @@
     height: 100%;
     position: relative; /* 关键1：为子元素建立定位上下文 */
   }
+  .demo-progress .el-progress--line {
+    margin-bottom: 15px;
+    position: relative;
+    width: 600px;
+    height: 100%;
+  }
   #can {
     display: block;
     position: fixed;
@@ -175,12 +187,9 @@
     pointer-events: auto;
   }
   #content {
-    font-size: 8vw;
     position: absolute; /* 关键2：脱离文档流，悬浮在 canvas 上 */
-    font-family: sans-serif;
-    text-align: center;
-    width: 100%;
-    height: 100%;
+    width: 700px;
+    height: 100px;
     display: flex;
     justify-content: center;
     align-items: center;
