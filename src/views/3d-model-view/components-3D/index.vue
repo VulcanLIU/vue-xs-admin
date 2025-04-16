@@ -154,7 +154,11 @@
 
 <template>
   <div ref="parentRef" class="three-container">
-    <canvas ref="container" class="can" />
+    <canvas id="can" ref="container" />
+
+    <div id="content">
+      <h1>Beautiful Cubes</h1>
+    </div>
   </div>
 </template>
 
@@ -162,14 +166,17 @@
   .three-container {
     width: 100%;
     height: 100%;
+    position: relative; /* 关键1：为子元素建立定位上下文 */
   }
   #can {
     display: block;
     position: fixed;
     z-index: 0;
+    pointer-events: auto;
   }
   #content {
-    font-size: 7vw;
+    font-size: 8vw;
+    position: absolute; /* 关键2：脱离文档流，悬浮在 canvas 上 */
     font-family: sans-serif;
     text-align: center;
     width: 100%;
@@ -178,6 +185,7 @@
     justify-content: center;
     align-items: center;
     background-color: transparent;
-    z-index: 1;
+    z-index: 10;
+    pointer-events: none; /* 穿透鼠标事件到 canvas */
   }
 </style>
