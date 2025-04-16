@@ -27,7 +27,7 @@
     //scene.fog = new THREE.Fog(0xa0a0a0, 200, 1000);
     // 2. 创建相机
     camera = new THREE.PerspectiveCamera(30, width / height, 0.1, 1000);
-    camera.position.set(30, 15, 15);
+    camera.position.set(50, 15, 15);
 
     // 3. 创建渲染器
     renderer = new THREE.WebGLRenderer({ canvas: canvass, antialias: true, alpha: true });
@@ -61,7 +61,7 @@
     const loader = new GLTFLoader();
     //const loader = new FBXLoader();
     loader.load(
-      '/models/1.gltf',
+      '/models/model.glb',
       gltf => {
         model = gltf.scene;
         model.traverse(child => {
@@ -155,30 +155,15 @@
 <template>
   <div ref="parentRef" class="three-container">
     <canvas id="can" ref="container" />
-
-    <div id="content">
-      <div class="demo-progress">
-        <el-progress :percentage="50" />
-        <el-progress :percentage="100" :format="format" />
-        <el-progress :percentage="100" status="success" />
-        <el-progress :percentage="100" status="warning" />
-        <el-progress :percentage="50" status="exception" />
-      </div>
-    </div>
   </div>
 </template>
 
 <style>
   .three-container {
+    margin: 0 auto;
     width: 100%;
     height: 100%;
     position: relative; /* 关键1：为子元素建立定位上下文 */
-  }
-  .demo-progress .el-progress--line {
-    margin-bottom: 15px;
-    position: relative;
-    width: 600px;
-    height: 100%;
   }
   #can {
     display: block;

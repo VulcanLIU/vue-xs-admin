@@ -61,6 +61,9 @@
       >
         <!-- 卡片内容插槽 -->
         <div class="card-content">
+          <header class="header">
+            <h3>XXXX进度监控</h3>
+          </header>
           <DView />
         </div>
       </div>
@@ -87,7 +90,6 @@
     position: relative;
     max-width: 100%;
     height: 100%;
-    margin: 20px auto;
     overflow: hidden;
   }
 
@@ -117,13 +119,32 @@
 
   .card-content {
     background: white;
-    border-radius: 8px;
+    border-radius: 10px;
+    background-clip: border-box; /* 使背景图片跟随 border-radius */
+    background-image: url('img/bg01.png');
+    background-size: cover;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-    padding: 20px;
+    padding: 0%;
     min-height: 300px;
     height: 100%;
   }
 
+  .header {
+    margin: 0 auto;
+    width: 100%;
+    height: 65px;
+    max-width: 1920px;
+    background: url('img/header.png') center no-repeat;
+  }
+
+  .header h3 {
+    margin: 0;
+    padding: 0;
+    line-height: 50px;
+    text-align: center;
+    font-size: 30px;
+    color: #5dc2fe;
+  }
   .indicators {
     text-align: center;
     margin-top: 15px;
