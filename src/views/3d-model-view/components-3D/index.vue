@@ -61,7 +61,7 @@
     const loader = new GLTFLoader();
     //const loader = new FBXLoader();
     loader.load(
-      '/models/model.glb',
+      '/models/1.gltf',
       gltf => {
         model = gltf.scene;
         model.traverse(child => {
