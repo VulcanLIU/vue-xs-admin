@@ -59,10 +59,8 @@
 </script>
 
 <template>
-  <HeaderVue />
   <main>
     <div class="flex w-full">
-      <SideBar />
       <div
         v-dragscroll:nochilddrag
         class="relative h-full w-screen max-h-[calc(100vh-64px)] bg-light-grey dark:bg-very-dark-grey"
@@ -75,7 +73,6 @@
         </div>
       </div>
     </div>
-    <ShowSidebar v-if="!managerStore.SideBar" />
   </main>
   <bgOverlay data-no-dragscroll />
   <div class="absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] z-10 max-w-xs w-11/12 sm:max-w-md">
