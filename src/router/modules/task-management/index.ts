@@ -5,7 +5,7 @@ const MyTask: AppRouteRecordRaw[] = [
   {
     path: '/task-management',
     name: 'RtTask',
-    component: () => import('@/views/task-management/index.vue'),
+    component: () => import('@/views/my-task-management-v2/index.vue'),
     meta: { title: '任务管理', icon: 'editor', position: 5 },
   },
 ];

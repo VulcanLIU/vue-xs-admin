@@ -20,7 +20,7 @@ export interface UserParams {
 export const getUserInfo = (user: string, pwd: string) =>
   deffHttp.post<UseInfoType, UserParams>(
     {
-      url: 'http://localhost:5000/api/login',
+      url: '/mock_api/login',
       data: { username: user, password: pwd },
     },
     { errorMessageMode: 'modal', withToken: false },

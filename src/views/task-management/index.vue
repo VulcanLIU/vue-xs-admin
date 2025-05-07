@@ -17,7 +17,7 @@
   import { useManagerStore } from './stores/manager.js';
 
   defineOptions({
-    name: 'RtTask',
+    name: 'RtTask2',
   });
   const boardsStore = useBoardsStore();
   const managerStore = useManagerStore();
