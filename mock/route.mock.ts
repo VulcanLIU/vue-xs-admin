@@ -11,7 +11,7 @@ const power = [
   //   name: 'Rt3dModelView',
   // },
   {
-    path: '/task-management',
+    path: '/task',
     name: 'RtTask',
   },
   {
