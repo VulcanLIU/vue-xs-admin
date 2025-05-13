@@ -4,7 +4,8 @@
 </script>
 
 <template>
-  <div class="page-container">
+  <div class="page-container bg-[url('@/assets/bg02.jpg')] bg-cover bg-no-repeat bg-center min-h-screen">
+    <div class="absolute inset-0 bg-black/20" />
     <div class="container mx-auto">
       <div class="head">
         <div class="application">
@@ -15,7 +16,7 @@
       <div class="login-box">
         <div className="mb-10 flex flex-row items-center justify-center enter-y">
           <img class="w-[44px] h-[44px]" src="@/assets/logo.png" mode="scaleToFill" alt="logo" />
-          <h2 className="m-0 ml-4">KK数据管理平台</h2>
+          <h2 className="text-3xl m-0 ml-4 text-gray-700 ">KK数据管理平台</h2>
         </div>
         <div class="login-form">
           <Form />
@@ -93,6 +94,7 @@
 
       .login-box {
         align-self: start;
+        background-color: rgba(255, 255, 255, 0.8);
         margin: auto;
         padding: 40px;
         border-radius: 10px;

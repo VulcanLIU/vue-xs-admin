@@ -79,8 +79,8 @@
       prop: 'product_name',
     },
     {
-      label: '产品名称',
-      prop: 'product_name',
+      label: '产品图号',
+      prop: 'product_number',
     },
     {
       label: '责任人',

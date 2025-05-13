@@ -12,6 +12,7 @@ const transformData = (rawData: RawData[]): ProductItem[] => {
         index: String(productMap.size + 1),
         product_name: item.所属产品名称,
         product_number: item.所属产品图号,
+        person: item.负责人,
         children: [],
       });
     }
