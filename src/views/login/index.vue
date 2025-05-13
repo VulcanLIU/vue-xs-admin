@@ -15,7 +15,7 @@
       <div class="login-box">
         <div className="mb-10 flex flex-row items-center justify-center enter-y">
           <img class="w-[44px] h-[44px]" src="@/assets/logo.png" mode="scaleToFill" alt="logo" />
-          <h2 className="m-0 ml-4">Vue Xs Admin</h2>
+          <h2 className="m-0 ml-4">KK数据管理平台</h2>
         </div>
         <div class="login-form">
           <Form />

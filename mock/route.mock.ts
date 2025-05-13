@@ -97,10 +97,6 @@ const power = [
       },
     ],
   },
-  {
-    path: 'myecharts',
-    name: 'RtMyEcharts',
-  },
 ];
 
 const adminPermissionRouter = [

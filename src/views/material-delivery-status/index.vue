@@ -1,10 +1,12 @@
 <script setup lang="tsx">
   import Table from '@/components/Table/index.vue';
   import axios from 'axios';
-  import { computed, h, onMounted, ref } from 'vue';
-  import $ from 'wangeditor/dist/utils/dom-core';
+  import { computed, onMounted, ref } from 'vue';
   import type { TableColumnProps } from '@/components/Table/types/table';
+  import { fetchData } from './components/fetchdata';
   import ComponentA, { type FormDataType } from './components/form/index.vue';
+  import type { PartItem, ProductItem, RawData } from './types/material';
+
   defineOptions({
     name: 'RtStatus',
   });
@@ -28,26 +30,10 @@
   ]);
 
   ///全部数据
-  let raw_data = ref('');
+  const raw_data = ref<RawData[]>([]);
   ///表格
+
   //|-嵌套表格
-  //-|-嵌套表内容结构接口
-  interface PartItem {
-    index: string;
-    part_serial_number: string; //零件清单编号
-    part_name: string; //零件名称
-    part_number: string; //零件图号
-    declared_Batch: string; //申报批次
-    arrival_status: string; //到货状态
-  }
-  interface ProductItem {
-    index: string;
-    product_name: string; //产品名称
-    product_number: string; //产品图号
-    part_arrival_rate?: string; //零件完备率
-    tooling_arrival_rate?: string; //工装完备率
-    children?: PartItem[];
-  }
   //-|-嵌套表格格式定义-nestingOption
   const nestingOption: TableColumnProps<ProductItem>[] = [
     {
@@ -93,8 +79,12 @@
       prop: 'product_name',
     },
     {
-      label: '产品图号',
-      prop: 'product_number',
+      label: '产品名称',
+      prop: 'product_name',
+    },
+    {
+      label: '责任人',
+      prop: 'person',
     },
     {
       label: '零件完备率',
@@ -107,65 +97,8 @@
     },
   ];
   //-|-嵌套表格内容声明
-  const nesting_tabList = ref<ProductItem[]>([]);
-  const raw_nesting_tabList = ref<ProductItem[]>([]);
-  ///数据
-  //|-数据结构定义-定义接口返回的原始数据类型
-  interface RawData {
-    序号: string;
-    清单编号: string;
-    名称: string;
-    图号: string;
-    所属产品名称: string;
-    所属产品图号: string;
-    单位: string;
-    数量: string;
-    厂家: string;
-    负责人: string;
-    申报批次: string;
-    单机数量: string;
-    是否到货: string;
-  }
-  //|-数据匹配-将扁平数据转化为树形数据
-  const transformData = (rawData: RawData[]): ProductItem[] => {
-    const productMap = new Map<string, ProductItem>();
-    rawData.forEach(item => {
-      const productKey = `${item.所属产品名称}`;
-      if (!productMap.has(productKey)) {
-        productMap.set(productKey, {
-          index: String(productMap.size + 1),
-          product_name: item.所属产品名称,
-          product_number: item.所属产品图号,
-          children: [],
-        });
-      }
-      productMap.get(productKey)?.children.push({
-        part_serial_number: item.清单编号,
-        part_name: item.名称,
-        part_number: item.图号,
-        declared_Batch: item.申报批次,
-        arrival_status: item.是否到货,
-      });
-    });
-    return Array.from(productMap.values());
-  };
-
-  //|-数据获取-API调用函数
-  const fetchData = async (args: string = '') => {
-    try {
-      //-|-使用API获取数据
-      const response = await axios.get(`http://localhost:5000/api/perchase_data${args}`);
-      //-|-如果API无传入数据则是在索取全部数据-保存在raw_data变量中
-      const _data = ref(response.data.data);
-      if (args === '') {
-        raw_data = _data;
-        raw_nesting_tabList.value = transformData(_data.value);
-      }
-      nesting_tabList.value = transformData(_data.value);
-    } catch (error) {
-      console.error('数据获取失败:', error);
-    }
-  };
+  const nesting_tabList = ref<ProductItem[]>([]); //用户检索后的数据
+  const raw_nesting_tabList = ref<ProductItem[]>([]); //全部数据
 
   const value = (online: number, total: number) => {
     if (online === 0 && total === 0) {
@@ -197,7 +130,7 @@
     //-|-计算物料到货率
     let total_part = 0;
     let qualified_part = 0;
-    if (raw_data.value !== '') {
+    if (raw_data.value.length > 0) {
       total_part = raw_data.value.length;
       qualified_part = raw_data.value.filter(item => item?.是否到货 === '是').length;
     }
@@ -240,12 +173,22 @@
         index.value++;
       }
     }
-    fetchData(args.value);
+    fetchData(args.value).then(result => {
+      if (args.value === '') {
+        raw_data.value = result[0];
+      }
+      raw_nesting_tabList.value = result[1];
+      nesting_tabList.value = result[2];
+    });
     console.log(args.value);
   };
   //初始化加载-页面初始化自动装载fetchData()函数
   onMounted(() => {
-    fetchData();
+    fetchData().then(result => {
+      raw_data.value = result[0];
+      raw_nesting_tabList.value = result[1];
+      nesting_tabList.value = result[2];
+    });
   });
 </script>
 <template>
