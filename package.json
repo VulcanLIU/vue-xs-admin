@@ -52,6 +52,7 @@
     "echarts": "^5.5.1",
     "element-plus": "^2.9.0",
     "es6-promise": "^4.2.8",
+    "file-saver": "^2.0.5",
     "i18next": "^24.1.0",
     "intro.js": "^7.2.0",
     "lodash": "^4.17.21",

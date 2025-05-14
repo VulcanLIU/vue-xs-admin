@@ -1,4 +1,7 @@
 ///数据
+
+import type { Slot } from "vue";
+
 //|-数据结构定义-定义接口返回的原始数据类型
 export interface RawData {
   序号: string;
@@ -25,6 +28,7 @@ export interface PartItem {
   part_number: string; //零件图号
   declared_Batch: string; //申报批次
   arrival_status: string; //到货状态
+  edit?: Slot;
 }
 export interface ProductItem {
   index: string;

@@ -10,6 +10,7 @@ export default jsxiaosiConfig(
   {
     rules: {
       'no-console': 'off',
+      'linebreak-style': 'off',
     },
   },
 );
