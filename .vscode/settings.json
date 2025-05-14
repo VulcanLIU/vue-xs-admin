@@ -37,5 +37,5 @@
     "titleBar.inactiveForeground": "#e7e7e799"
   },
   "peacock.color": "#0072e6",
-  "files.eol": "\n"
+  "files.eol": "\r\n"
 }
