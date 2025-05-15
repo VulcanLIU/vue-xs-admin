@@ -49,6 +49,7 @@ const value = (online: number, total: number) => {
 const statistics = computed(() => {
   //-|-新建一个盛放结果的数组
   const rateArray: number[] = new Array(nesting_tabList.value.length);
+  const rateArray_str: string[] = new Array(nesting_tabList.value.length);
   //--|-循环读取嵌套表格中的条目
   let total = 0;
   let arrival_status_couter = 0;
@@ -66,6 +67,7 @@ const statistics = computed(() => {
     }
     //---|-将计算结果添加到数组中
     rateArray[key] = value(arrival_status_couter, total);
+    rateArray_str[key] = `${arrival_status_couter}/${total}`;
     //console.log(total, arrival_status_couter, rateArray[key]);
   }
   //-|-计算物料到货率
@@ -109,6 +111,7 @@ const statistics = computed(() => {
     qualified_part,
     total_product,
     qualified_product,
+    rateArray_str,
     rateArray,
   };
 });
@@ -171,13 +174,16 @@ function exportToExcel() {
   );
 }
 
-//初始化加载-页面初始化自动装载fetchData()函数
-onMounted(() => {
+function onUpdateData() {
   fetchData().then((result) => {
     raw_data.value = result[0];
     raw_nesting_tabList.value = result[1];
     nesting_tabList.value = result[2];
   });
+}
+//初始化加载-页面初始化自动装载fetchData()函数
+onMounted(() => {
+  onUpdateData();
 });
 </script>
 <template>
@@ -195,7 +201,7 @@ onMounted(() => {
       >
         <el-card class="box-card">
           <template #header>
-            <div class="card-header cursor">
+            <div class="card-header cursor text-xl">
               <span>{{ item.title }}</span>
               <SvgIcon name="iEL-arrow-right" />
             </div>
@@ -230,7 +236,7 @@ onMounted(() => {
       >
         <el-card class="box-card">
           <template #header>
-            <div class="card-header cursor">
+            <div class="card-header cursor text-xl">
               <span>{{ item.title }}</span>
               <SvgIcon name="iEL-arrow-right" />
             </div>
@@ -261,12 +267,15 @@ onMounted(() => {
       <template #header>
         <div class="card-header">
           <span class="text-xl">产品查询</span>
+          <el-button type="primary" style="margin: 12px" @click="exportToExcel">
+            导出Excel
+          </el-button>
         </div>
       </template>
       <PartTable
         ref="partTableRef"
         :data="nesting_tabList"
-        @update:data="(val) => (nesting_tabList = val)"
+        @update:data="(val) => onUpdateData()"
       >
         <template #hh="slotData">
           <el-progress
@@ -274,11 +283,9 @@ onMounted(() => {
             :stroke-width="26"
             :percentage="statistics.rateArray[slotData.$index]"
           />
+          <span>{{ statistics.rateArray_str[slotData.$index] }}</span>
         </template>
       </PartTable>
-      <el-button type="primary" style="margin: 12px" @click="exportToExcel">
-        导出Excel
-      </el-button>
     </el-card>
   </div>
 </template>

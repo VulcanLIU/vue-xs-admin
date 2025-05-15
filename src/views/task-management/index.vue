@@ -1,85 +1,93 @@
 <script setup>
-  import { onMounted } from 'vue';
-  import bgOverlay from './components/bgOverlay.vue';
-  import Board from './components/board/Board.vue';
-  import EmptyBoard from './components/board/Empty.vue';
-  import NoBoards from './components/board/NoBoards.vue';
-  import HeaderVue from './components/Header.vue';
-  import BoardForm from './components/manager/BoardForm.vue';
-  import Delete from './components/manager/Delete.vue';
-  import SideBar from './components/manager/Sidebar.vue';
-  import ShowSidebar from './components/manager/sidebar/ShowSidebar.vue';
-  import SidebarMobile from './components/manager/SidebarMobile.vue';
+import { onMounted } from "vue";
+import bgOverlay from "./components/bgOverlay.vue";
+import Board from "./components/board/Board.vue";
+import EmptyBoard from "./components/board/Empty.vue";
+import NoBoards from "./components/board/NoBoards.vue";
+import HeaderVue from "./components/Header.vue";
+import BoardForm from "./components/manager/BoardForm.vue";
+import Delete from "./components/manager/Delete.vue";
+import SideBar from "./components/manager/Sidebar.vue";
+import ShowSidebar from "./components/manager/sidebar/ShowSidebar.vue";
+import SidebarMobile from "./components/manager/SidebarMobile.vue";
 
-  import TaskForm from './components/manager/TaskForm.vue';
-  import TaskView from './components/manager/TaskView.vue';
-  import { useBoardsStore } from './stores/boards.js';
-  import { useManagerStore } from './stores/manager.js';
+import TaskForm from "./components/manager/TaskForm.vue";
+import TaskView from "./components/manager/TaskView.vue";
+import { useBoardsStore } from "./stores/boards.js";
+import { useManagerStore } from "./stores/manager.js";
 
-  defineOptions({
-    name: 'RtTask2',
-  });
-  const boardsStore = useBoardsStore();
-  const managerStore = useManagerStore();
+defineOptions({
+    name: "RtTask2",
+});
+const boardsStore = useBoardsStore();
+const managerStore = useManagerStore();
 
-  onMounted(async () => {
+onMounted(async () => {
     //INIT STORAGE
     boardsStore.$subscribe((mutations, state) => {
-      localStorage.setItem('boards', JSON.stringify(state));
+        localStorage.setItem("boards", JSON.stringify(state));
     });
-    const storageData = localStorage.getItem('boards');
+    const storageData = localStorage.getItem("boards");
     if (storageData === null) {
-      const jsonData = await import('./assets/json/data.json');
-      boardsStore.boards = jsonData.boards;
+        const jsonData = await import("./assets/json/data.json");
+        boardsStore.boards = jsonData.boards;
     } else {
-      boardsStore.$state = JSON.parse(storageData);
+        boardsStore.$state = JSON.parse(storageData);
     }
 
     //DARK MODE
     if (
-      localStorage.getItem('theme') === 'dark' ||
-      (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
+        localStorage.getItem("theme") === "dark" ||
+        (!("theme" in localStorage) &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches)
     ) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-      managerStore.darkmode = true;
+        document.documentElement.classList.add("dark");
+        localStorage.setItem("theme", "dark");
+        managerStore.darkmode = true;
     } else {
-      localStorage.setItem('theme', 'light');
-      managerStore.darkmode = false;
+        localStorage.setItem("theme", "light");
+        managerStore.darkmode = false;
     }
     managerStore.$subscribe((mutations, state) => {
-      localStorage.setItem('theme', state.darkmode ? 'dark' : 'light');
-      if (state.darkmode) {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
+        localStorage.setItem("theme", state.darkmode ? "dark" : "light");
+        if (state.darkmode) {
+            document.documentElement.classList.add("dark");
+        } else {
+            document.documentElement.classList.remove("dark");
+        }
     });
-  });
+});
 </script>
 
 <template>
-  <main>
-    <div class="flex w-full">
-      <div
-        v-dragscroll:nochilddrag
-        class="relative h-full w-screen max-h-[calc(100vh-64px)] bg-light-grey dark:bg-very-dark-grey"
-        :class="managerStore.sidebar ? 'sm:pl-[256px] lg:pl-[300px]' : ''"
-      >
-        <div data-dragscroll class="p-6 w-full overflow-auto max-h-[calc(100vh-64px)] transition-all">
-          <Board v-if="boardsStore.getColumns" data-dragscroll />
-          <NoBoards v-else-if="boardsStore.boards.length === 0" />
-          <EmptyBoard v-else />
+    <main>
+        <div class="flex w-full">
+            <div
+                v-dragscroll:nochilddrag
+                class="relative h-full w-screen max-h-[calc(100vh-64px)] bg-light-grey dark:bg-very-dark-grey"
+                :class="
+                    managerStore.sidebar ? 'sm:pl-[256px] lg:pl-[300px]' : ''
+                "
+            >
+                <div
+                    data-dragscroll
+                    class="p-6 w-full overflow-auto max-h-[calc(100vh-64px)] transition-all"
+                >
+                    <Board v-if="boardsStore.getColumns" data-dragscroll />
+                    <NoBoards v-else-if="boardsStore.boards.length === 0" />
+                    <EmptyBoard v-else />
+                </div>
+            </div>
         </div>
-      </div>
+    </main>
+    <bgOverlay data-no-dragscroll />
+    <div
+        class="absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] z-10 max-w-xs w-11/12 sm:max-w-md"
+    >
+        <TaskView v-if="managerStore.taskView" />
+        <TaskForm v-if="managerStore.taskForm.visible" />
+        <Delete v-if="managerStore.delete.visible" />
+        <BoardForm v-if="managerStore.boardForm.visible" />
+        <SidebarMobile v-if="managerStore.sidebarMobile" />
     </div>
-  </main>
-  <bgOverlay data-no-dragscroll />
-  <div class="absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] z-10 max-w-xs w-11/12 sm:max-w-md">
-    <TaskView v-if="managerStore.taskView" />
-    <TaskForm v-if="managerStore.taskForm.visible" />
-    <Delete v-if="managerStore.delete.visible" />
-    <BoardForm v-if="managerStore.boardForm.visible" />
-    <SidebarMobile v-if="managerStore.sidebarMobile" />
-  </div>
 </template>
