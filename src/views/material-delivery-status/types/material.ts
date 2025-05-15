@@ -26,6 +26,8 @@ export interface PartItem {
   part_serial_number?: string; //零件清单编号
   part_name: string; //零件名称
   part_number: string; //零件图号
+  per_unit_quantity: string; //单机数量
+  property: string; //属性
   declared_Batch: string; //申报批次
   arrival_status: string; //到货状态
   edit?: Slot;

@@ -202,11 +202,11 @@ onMounted(() => {
           </template>
           <div class="card-content">
             <div class="numerical-value">
-              <span class="number"
-                >{{ statistics.qualified_product }}/{{
+              <span class="number">
+                {{ statistics.qualified_product }}/{{
                   statistics.total_product
-                }}</span
-              >
+                }}
+              </span>
               <span>可修/总数</span>
             </div>
             <el-progress
@@ -260,7 +260,7 @@ onMounted(() => {
       <ComponentA @submit-form="submitForm" />
       <template #header>
         <div class="card-header">
-          <span>产品查询</span>
+          <span class="text-xl">产品查询</span>
         </div>
       </template>
       <PartTable
@@ -276,14 +276,10 @@ onMounted(() => {
           />
         </template>
       </PartTable>
+      <el-button type="primary" style="margin: 12px" @click="exportToExcel">
+        导出Excel
+      </el-button>
     </el-card>
-    <el-button
-      type="primary"
-      style="margin-bottom: 12px"
-      @click="exportToExcel"
-    >
-      导出Excel
-    </el-button>
   </div>
 </template>
 

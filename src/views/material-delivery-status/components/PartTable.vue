@@ -15,7 +15,8 @@ const emit = defineEmits(["update:data"]);
 
 // 编辑弹窗相关
 const editDialogVisible = ref(false);
-const editForm = reactive<Partial<PartItem>>({});
+const editForm = reactive<Partial<ProductItem>>({});
+const editPart = reactive<Partial<PartItem>>({});
 const editFormRef = ref();
 const editFormRules = {
   part_serial_number: [
@@ -25,12 +26,24 @@ const editFormRules = {
   // ...其他校验规则...
 };
 let editParentIndex = -1;
-
+let editSubIndex = -1;
 // 打开弹窗
-function openEditDialog(parentIndex: number) {
-  Object.assign(editForm, {}); // 新增时清空
-  editParentIndex = parentIndex;
-  editDialogVisible.value = true;
+function openEditDialog(parentIndex: number, Index: number) {
+  //Object.assign(editForm, {}); // 新增时清空
+  if (
+    parentIndex >= 0 &&
+    Index >= 0 &&
+    props.data[parentIndex] &&
+    props.data[parentIndex].children &&
+    props.data[parentIndex].children[Index]
+  ) {
+    Object.assign(editForm, props.data[parentIndex]);
+    Object.assign(editPart, props.data[parentIndex].children[Index]);
+    editParentIndex = parentIndex;
+    editSubIndex = Index;
+
+    editDialogVisible.value = true;
+  }
 }
 
 //将其暴露给父组件
@@ -44,7 +57,7 @@ async function handleEditSubmit() {
   await formRef.validate();
   // 新增到嵌套表格
   if (editParentIndex > -1) {
-    props.data[editParentIndex].children.push({ ...editForm });
+    //props.data[editParentIndex].children.push({ ...editForm });
     emit("update:data", props.data); // 通知父组件数据变化
     // 发送到后端
     await axios.post("/api/your-endpoint", editForm); // 替换为你的接口
@@ -58,18 +71,22 @@ const getNgOption = (parentIndex: number): TableColumnProps<PartItem>[] => [
   { label: "物料编码", prop: "part_serial_number", sortable: true },
   { label: "零件名称", prop: "part_name" },
   { label: "零件图号", prop: "part_number" },
+  { label: "单价数量", prop: "per_unit_quantity" },
+  { label: "零件属性", prop: "property" },
   { label: "申报批次", prop: "declared_Batch" },
   { label: "到货状态", prop: "arrival_status" },
   {
-    label: "编辑",
+    label: " ",
     prop: "edit",
-    render: () => (
+    render: (slotData: any) => (
       <el-button
         type="primary"
         size="small"
-        onClick={() => openEditDialog(parentIndex)}
+        onClick={() => {
+          openEditDialog(parentIndex, slotData.$index);
+        }}
       >
-        新增
+        编辑
       </el-button>
     ),
   },
@@ -84,6 +101,7 @@ const nestingOption: TableColumnProps<ProductItem>[] = [
       return (
         <div style={{ padding: "0 8px" }}>
           <Table
+            class="warning-row"
             data={slotData.row.children || []}
             border
             option={getNgOption(parentIndex)}
@@ -102,35 +120,51 @@ const nestingOption: TableColumnProps<ProductItem>[] = [
 </script>
 
 <template>
-  <Table :data="data" border row-key="index" :option="nestingOption">
-    <template #part_arrival_rate="slotData">
-      <slot name="hh" v-bind="slotData" />
-    </template>
-  </Table>
-  <el-dialog v-model="editDialogVisible" title="新增零件" width="400px">
-    <el-form
-      ref="editFormRef"
-      :model="editForm"
-      :rules="editFormRules"
-      label-width="100px"
-    >
-      <el-form-item label="物料编码" prop="part_serial_number">
-        <el-input v-model="editForm.part_serial_number" />
-      </el-form-item>
-      <el-form-item label="零件名称" prop="part_name">
-        <el-input v-model="editForm.part_name" />
-      </el-form-item>
-      <!-- 其他表单项 -->
-      <el-form-item label="到货状态" prop="arrival_status">
-        <el-select v-model="editForm.arrival_status" placeholder="请选择">
-          <el-option label="是" value="是" />
-          <el-option label="否" value="否" />
-        </el-select>
-      </el-form-item>
-    </el-form>
-    <template #footer>
-      <el-button @click="editDialogVisible = false">取消</el-button>
-      <el-button type="primary" @click="handleEditSubmit">提交</el-button>
-    </template>
-  </el-dialog>
+  <div>
+    <Table :data="data" border row-key="index" :option="nestingOption">
+      <template #part_arrival_rate="slotData">
+        <slot name="hh" v-bind="slotData" />
+      </template>
+    </Table>
+    <ElDialog v-model="editDialogVisible" title="编辑零件信息" width="400px">
+      <el-form
+        ref="editFormRef"
+        :model="editForm"
+        :rules="editFormRules"
+        label-width="100px"
+      >
+        <el-form-item label="物料编码" prop="part_serial_number">
+          <el-input v-model="editPart.part_serial_number" />
+        </el-form-item>
+        <el-form-item label="零件名称" prop="part_name">
+          <el-input v-model="editPart.part_name" />
+        </el-form-item>
+        <el-form-item label="零件图号" prop="part_number">
+          <el-input v-model="editPart.part_number" />
+        </el-form-item>
+        <el-form-item label="单机数量" prop="per_unit_quantity">
+          <el-input v-model="editPart.per_unit_quantity" />
+        </el-form-item>
+        <el-form-item label="申报批次" prop="declared_Batch">
+          <el-input v-model="editPart.declared_Batch" />
+        </el-form-item>
+        <el-form-item label="所属产品名称" prop="product_name">
+          <el-input v-model="editForm.product_name" />
+        </el-form-item>
+        <el-form-item label="所属产品图号" prop="product_number">
+          <el-input v-model="editForm.product_number" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="editDialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="handleEditSubmit">提交</el-button>
+      </template>
+    </ElDialog>
+  </div>
 </template>
+
+<style scoped>
+:deep(.el-table .warning-row) {
+  --el-table-tr-bg-color: rgba(247, 170, 106, 0.074);
+}
+</style>

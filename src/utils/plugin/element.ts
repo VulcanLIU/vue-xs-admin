@@ -16,7 +16,7 @@ import {
   RemoveFilled,
   Select,
   Setting,
-} from '@element-plus/icons-vue';
+} from "@element-plus/icons-vue";
 import {
   ElAlert,
   ElBreadcrumb,
@@ -33,6 +33,7 @@ import {
   ElDatePicker,
   ElDescriptions,
   ElDescriptionsItem,
+  ElDialog,
   ElDivider,
   ElDrawer,
   ElDropdown,
@@ -63,9 +64,9 @@ import {
   ElTag,
   ElText,
   ElTooltip,
-} from 'element-plus';
+} from "element-plus";
 
-import type { App, Component } from 'vue';
+import type { App, Component } from "vue";
 
 // Directives
 const plugins = [ElLoading, ElInfiniteScroll];
@@ -91,6 +92,7 @@ const components = [
   ElDropdown,
   ElDropdownItem,
   ElDropdownMenu,
+  ElDialog,
   ElForm,
   ElFormItem,
   ElAlert,
@@ -136,7 +138,7 @@ export const iconComponents = [
 ];
 
 const transElIconName = (iconName: string): string => {
-  return `iEL${iconName.replace(/[A-Z]/g, match => `-${match.toLowerCase()}`)}`;
+  return `iEL${iconName.replace(/[A-Z]/g, (match) => `-${match.toLowerCase()}`)}`;
 };
 
 export function useElementPlus(app: App) {
@@ -145,7 +147,7 @@ export function useElementPlus(app: App) {
     app.component(component.name as string, component);
   });
   // 注册指令
-  plugins.forEach(plugin => {
+  plugins.forEach((plugin) => {
     app.use(plugin);
   });
   // 注册图标
