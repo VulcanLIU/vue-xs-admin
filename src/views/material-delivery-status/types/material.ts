@@ -3,8 +3,8 @@
 import type { Slot } from "vue";
 
 //|-数据结构定义-定义接口返回的原始数据类型
-export interface RawData {
-  序号: string;
+//-|-XvQiuData,王胜尧这边写的需求表-在数据库中的字段
+export interface XvQiuData {
   物料编码?: string; //没到货的零件在后端匹配会出现无物料编码
   名称: string;
   图号: string;
@@ -16,6 +16,10 @@ export interface RawData {
   所属产品图号: string;
   属性: string;
   第几批申报: string;
+}
+
+//-|-RawData,原始数据-数据库匹配后得到的数据
+export interface RawData extends XvQiuData {
   库存数量: string;
   是否到货: string;
 }

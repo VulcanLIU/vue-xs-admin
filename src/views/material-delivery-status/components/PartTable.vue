@@ -5,7 +5,7 @@ import { ElMessage } from "element-plus";
 // filepath: e:\1-projects\2-Vue\2-My-vue-xs-admin\src\views\material-delivery-status\components\PartTable.vue
 import { reactive, ref } from "vue";
 import type { TableColumnProps } from "@/components/Table/types/table";
-import type { PartItem, ProductItem } from "../types/material";
+import type { PartItem, ProductItem, XvQiuData } from "../types/material";
 
 // 父表数据由父组件传入
 const props = defineProps<{
@@ -19,11 +19,20 @@ const editForm = reactive<Partial<ProductItem>>({});
 const editPart = reactive<Partial<PartItem>>({});
 const editFormRef = ref();
 const editFormRules = {
-  part_serial_number: [
-    { required: true, message: "物料编码必填", trigger: "blur" },
-  ],
+  // part_serial_number: [
+  //   { required: true, message: "物料编码必填", trigger: "blur" },
+  // ],
   part_name: [{ required: true, message: "零件名称必填", trigger: "blur" }],
-  // ...其他校验规则...
+  person: [{ required: true, message: "责任人必填", trigger: "blur" }],
+  part_number: [{ required: true, message: "零件图号必填", trigger: "blur" }],
+  per_unit_quantity: [{ required: true, message: "单机数量", trigger: "blur" }],
+  declared_Batc: [{ required: true, message: "申报批次必填", trigger: "blur" }],
+  product_name: [
+    { required: true, message: "所属产品名称必填", trigger: "blur" },
+  ],
+  product_number: [
+    { required: true, message: "所属产品图号", trigger: "blur" },
+  ],
 };
 let editParentIndex = -1;
 let editSubIndex = -1;
@@ -57,10 +66,10 @@ async function handleEditSubmit() {
   await formRef.validate();
   // 新增到嵌套表格
   if (editParentIndex > -1) {
-    //props.data[editParentIndex].children.push({ ...editForm });
+    // props.data[editParentIndex].children.push({ ...editForm });
     emit("update:data", props.data); // 通知父组件数据变化
     // 发送到后端
-    await axios.post("/api/your-endpoint", editForm); // 替换为你的接口
+    // await axios.post("/api/your-endpoint", editForm); // 替换为你的接口
     ElMessage.success("新增成功");
   }
   editDialogVisible.value = false;
@@ -79,15 +88,17 @@ const getNgOption = (parentIndex: number): TableColumnProps<PartItem>[] => [
     label: " ",
     prop: "edit",
     render: (slotData: any) => (
-      <el-button
-        type="primary"
-        size="small"
-        onClick={() => {
-          openEditDialog(parentIndex, slotData.$index);
-        }}
-      >
-        编辑
-      </el-button>
+      <div style={{ textAlign: "center" }}>
+        <el-button
+          type="primary"
+          size="small"
+          onClick={() => {
+            openEditDialog(parentIndex, slotData.$index);
+          }}
+        >
+          编辑
+        </el-button>
+      </div>
     ),
   },
 ];
@@ -126,7 +137,7 @@ const nestingOption: TableColumnProps<ProductItem>[] = [
         <slot name="hh" v-bind="slotData" />
       </template>
     </Table>
-    <ElDialog v-model="editDialogVisible" title="编辑零件信息" width="400px">
+    <ElDialog v-model="editDialogVisible" title="编辑零件信息" width="600px">
       <el-form
         ref="editFormRef"
         :model="editForm"
@@ -134,10 +145,16 @@ const nestingOption: TableColumnProps<ProductItem>[] = [
         label-width="100px"
       >
         <el-form-item label="物料编码" prop="part_serial_number">
-          <el-input v-model="editPart.part_serial_number" />
+          <el-input
+            v-model="editPart.part_serial_number"
+            validate-event="false"
+          />
         </el-form-item>
         <el-form-item label="零件名称" prop="part_name">
-          <el-input v-model="editPart.part_name" />
+          <el-input
+            v-model="editForm.children[editSubIndex].part_name"
+            validate-event="false"
+          />
         </el-form-item>
         <el-form-item label="零件图号" prop="part_number">
           <el-input v-model="editPart.part_number" />
@@ -147,6 +164,9 @@ const nestingOption: TableColumnProps<ProductItem>[] = [
         </el-form-item>
         <el-form-item label="申报批次" prop="declared_Batch">
           <el-input v-model="editPart.declared_Batch" />
+        </el-form-item>
+        <el-form-item label="责任人" prop="person">
+          <el-input v-model="editForm.person" />
         </el-form-item>
         <el-form-item label="所属产品名称" prop="product_name">
           <el-input v-model="editForm.product_name" />

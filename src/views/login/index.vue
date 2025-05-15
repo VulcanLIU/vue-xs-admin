@@ -1,10 +1,12 @@
 <script setup lang="ts">
-  import { AppLocale, AppTheme } from '@/components/Application';
-  import Form from './compoontne/form.vue';
+import { AppLocale, AppTheme } from "@/components/Application";
+import Form from "./compoontne/form.vue";
 </script>
 
 <template>
-  <div class="page-container bg-[url('@/assets/bg02.jpg')] bg-cover bg-no-repeat bg-center min-h-screen">
+  <div
+    class="page-container bg-[url('@/assets/bg02.jpg')] bg-cover bg-no-repeat bg-center min-h-screen"
+  >
     <div class="absolute inset-0 bg-black/20" />
     <div class="container mx-auto">
       <div class="head">
@@ -14,8 +16,15 @@
         </div>
       </div>
       <div class="login-box">
-        <div className="mb-10 flex flex-row items-center justify-center enter-y">
-          <img class="w-[44px] h-[44px]" src="@/assets/logo.png" mode="scaleToFill" alt="logo" />
+        <div
+          className="mb-10 flex flex-row items-center justify-center enter-y"
+        >
+          <img
+            class="w-[44px] h-[44px]"
+            src="@/assets/logo.png"
+            mode="scaleToFill"
+            alt="logo"
+          />
           <h2 className="text-3xl m-0 ml-4 text-gray-700 ">KK数据管理平台</h2>
         </div>
         <div class="login-form">
@@ -27,84 +36,84 @@
 </template>
 
 <style lang="scss" scoped>
-  .back {
-    background-color: red;
-  }
+.back {
+  background-color: red;
+}
 
-  .page-container {
-    width: 100vw;
-    height: 100vh;
-    transition: all 0.3s linear;
-    border-radius: 0;
+.page-container {
+  width: 100vw;
+  height: 100vh;
+  transition: all 0.3s linear;
+  border-radius: 0;
 
-    .container {
+  .container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+    margin: auto;
+    padding: 0 2rem;
+
+    .head {
       display: flex;
-      justify-content: space-between;
+      position: fixed;
+      top: 0;
+      left: 0;
+      align-items: center;
+      justify-content: flex-end;
       width: 100%;
-      height: 100%;
-      margin: auto;
-      padding: 0 2rem;
+      padding: 10px 20px;
 
-      .head {
+      .application {
         display: flex;
-        position: fixed;
-        top: 0;
-        left: 0;
         align-items: center;
-        justify-content: flex-end;
-        width: 100%;
-        padding: 10px 20px;
+        justify-content: space-between;
 
-        .application {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-
-          .icon-size {
-            font-size: var(--font-size-extra-large);
-          }
-
-          .item {
-            margin-left: 20px;
-          }
+        .icon-size {
+          font-size: var(--font-size-extra-large);
         }
 
-        .logo {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-
-          .logo-img {
-            width: 44px;
-            height: 44px;
-          }
-
-          .logo-name {
-            margin-left: 8px;
-            color: #999;
-            font:
-              bold 200% Consolas,
-              Monaco,
-              monospace;
-            font-size: 18px;
-            text-transform: uppercase;
-          }
+        .item {
+          margin-left: 20px;
         }
       }
 
-      .login-box {
-        align-self: start;
-        background-color: rgba(255, 255, 255, 0.8);
-        margin: auto;
-        padding: 40px;
-        border-radius: 10px;
-        box-shadow: 0 15px 25px 0 rgb(0 0 0 / 60%);
-        text-align: center;
+      .logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
-        .login-form {
-          width: 360px;
+        .logo-img {
+          width: 44px;
+          height: 44px;
+        }
+
+        .logo-name {
+          margin-left: 8px;
+          color: #999;
+          font:
+            bold 200% Consolas,
+            Monaco,
+            monospace;
+          font-size: 18px;
+          text-transform: uppercase;
         }
       }
     }
+
+    .login-box {
+      align-self: start;
+      background-color: rgba(255, 255, 255, 0.8);
+      margin: auto;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 15px 25px 0 rgb(0 0 0 / 60%);
+      text-align: center;
+
+      .login-form {
+        width: 360px;
+      }
+    }
   }
+}
 </style>
