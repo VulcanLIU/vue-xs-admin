@@ -243,11 +243,9 @@ onMounted(() => {
           </template>
           <div class="card-content">
             <div class="numerical-value">
-              <span class="number"
-                >{{ statistics.qualified_part }}/{{
-                  statistics.total_part
-                }}</span
-              >
+              <span class="number">
+                {{ statistics.qualified_part }}/{{ statistics.total_part }}
+              </span>
               <span>到货/总数</span>
             </div>
             <el-progress

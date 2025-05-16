@@ -157,7 +157,9 @@
     }
   },
   "resolutions": {
-    "bin-wrapper": "npm:bin-wrapper-china"
+    "bin-wrapper": "npm:bin-wrapper-china",
+    "esbuild": "npm:esbuild-wasm@latest",
+    "rollup": "npm:@rollup/wasm-node@latest"
   },
   "lint-staged": {
     "{src,mock,build}/**/*.{ts,js,tsx,jsx}": [
