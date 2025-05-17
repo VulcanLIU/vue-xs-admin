@@ -1,3 +1,4 @@
+//主视图界面
 <script setup lang="tsx">
 import { saveAs } from "file-saver";
 import { computed, onMounted, ref } from "vue";
@@ -186,6 +187,7 @@ onMounted(() => {
   onUpdateData();
 });
 </script>
+
 <template>
   <div class="enter-y">
     <!--进度卡片-->

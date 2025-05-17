@@ -1,6 +1,7 @@
 import path from 'path';
 import { defineFakeRoute } from 'vite-plugin-fake-server/client';
 
+//基础路由（所有用户共有）
 const power = [
   {
     path: '/welcome',
@@ -14,6 +15,15 @@ const power = [
     path: '/task',
     name: 'RtTask',
   },
+  {
+    path: '/hello',
+    name: 'RtHello',
+  },
+  {
+    path: '/day',
+    name: 'RtDay',
+  },
+
   {
     path: '/status',
     name: 'RtStatus',
@@ -99,6 +109,7 @@ const power = [
   },
 ];
 
+//管理员额外权限路由
 const adminPermissionRouter = [
   {
     path: '/permissions',
@@ -178,6 +189,7 @@ const adminPermissionRouter = [
   },
 ];
 
+//测试用户额外权限路由
 const testPermissionRouter = [
   {
     path: '/permissions',
@@ -196,7 +208,7 @@ const testPermissionRouter = [
 ];
 
 // permissionRouter
-
+//定义模拟接口：根据用户角色返回路由权限
 export default defineFakeRoute([
   {
     url: '/mock_api/getRoute',
