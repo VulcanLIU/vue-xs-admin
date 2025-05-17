@@ -9,3 +9,4 @@ dist
 dist_electron
 node_modules
 public/models/model.glb
+pnpm-store
