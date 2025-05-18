@@ -1,8 +1,8 @@
-pnpm config set cache-dir "G:\2-vue-xs-admin\pnpm-store\pnpm-cache"
+pnpm config set cache-dir "E:\1-projects\2-Vue\2-My-vue-xs-admin\pnpm-store\pnpm-cache"
 #pnpm 创建的当前仅由更新检查器使用的pnpm-state.json文件的目录。
-pnpm config set state-dir "G:\2-vue-xs-admin\pnpm-store\pnpm-state"
+pnpm config set state-dir "E:\1-projects\2-Vue\2-My-vue-xs-admin\pnpm-store\pnpm-state"
 #指定储存全局依赖的目录。
-pnpm config set global-dir "G:\2-vue-xs-admin\pnpm-store\global"
+pnpm config set global-dir "E:\1-projects\2-Vue\2-My-vue-xs-admin\pnpm-store\global"
 #所有包被保存在磁盘上的位置。
 #（可选，以下这条命令可以选择不执行也是OK的）
-pnpm config set store-dir "G:\2-vue-xs-admin\pnpm-store\pnpm-store"
+pnpm config set store-dir "E:\1-projects\2-Vue\2-My-vue-xs-admin\pnpm-store\pnpm-store"
