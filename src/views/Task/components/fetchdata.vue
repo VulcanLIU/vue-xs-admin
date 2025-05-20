@@ -10,6 +10,7 @@
 
   const userInfoStore = useUserInfoStoreHook();
 
+  //获取数据信息-实际与后端通信的API
   const getTaskInfo = (user: string, id: number) =>
     deffHttp.post<TaskParams, UserParams>(
       {
@@ -19,6 +20,7 @@
       { errorMessageMode: 'modal', withToken: false },
     );
 
+  //拉取数据
   const FetchData = async (task_data: TaskParams[]) => {
     const res = await getTaskInfo(userInfoStore.userInfo?.name, userInfoStore.userInfo?.userid);
     console.log(res.data);

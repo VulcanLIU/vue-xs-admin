@@ -1,16 +1,16 @@
-import jsxiaosiConfig from '@jsxiaosi/eslint-config';
+import jsxiaosiConfig from "@jsxiaosi/eslint-config";
 
 export default jsxiaosiConfig(
-  {
-    vue: true,
-    prettier: {
-      usePrettierrc: true,
+    {
+        vue: true,
+        prettier: {
+            usePrettierrc: true,
+        },
     },
-  },
-  {
-    rules: {
-      'no-console': 'off',
-      'linebreak-style': 'off',
+    {
+        rules: {
+            "no-console": "off",
+            "linebreak-style": "off",
+        },
     },
-  },
 );
