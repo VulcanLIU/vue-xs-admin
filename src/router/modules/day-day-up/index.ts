@@ -7,10 +7,10 @@ import type { AppRouteRecordRaw } from '@/router/type';
 
 const MyEcharts: AppRouteRecordRaw[] = [
   {
-    path: '/status',
-    name: 'RtStatus',
-    component: () => import('@/views/material-delivery-status/index.vue'),
-    meta: { title: '采购情况', icon: 'editor', position: 4 },
+    path: '/day',
+    name: 'RtDay',
+    component: () => import('@/views/day-day-up/index.vue'),
+    meta: { title: '天天向上', icon: 'editor', position: 4 },
   },
 ];
 export default MyEcharts;
