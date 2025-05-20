@@ -20,10 +20,6 @@ const power = [
         name: "RtHello",
     },
     {
-        path: "/day",
-        name: "RtDay",
-    },
-    {
         path: "/status",
         name: "RtStatus",
         children: [
