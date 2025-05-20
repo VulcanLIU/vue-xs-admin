@@ -7,5 +7,6 @@ yarn-error.log
 bin
 dist
 dist_electron
-node_modules
+node_modules/
 public/models/model.glb
+pnpm-store/
