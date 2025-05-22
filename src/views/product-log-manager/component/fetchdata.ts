@@ -73,3 +73,17 @@ export const fetchData = async (args: string = "") => {
 	}
 	return raw_data;
 };
+
+//|-数据获取-API调用函数
+export const fetchAllProductionData = async () => {
+	const response = ref("");
+	try {
+		//-|-使用API获取数据
+		response.value = await axios.get(
+			`http://localhost:5000/api/product_schedule_all`,
+		);
+	} catch (error) {
+		console.error("数据获取失败:", error);
+	}
+	return response.value.data.data;
+};
