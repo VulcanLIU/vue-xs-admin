@@ -2,6 +2,8 @@
 import { Plus } from "@element-plus/icons-vue";
 import { ref } from "vue";
 import AddTaskForm from "./AddTaskForm.vue";
+import type { TaskParams } from "../types/task";
+
 const emit = defineEmits(["dragEnd", "statusChanged"]);
 
 const centerDialogVisible = ref(false);

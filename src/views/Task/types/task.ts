@@ -7,8 +7,8 @@ export type Status = (typeof STATUS_LIST)[number];
 
 //接口-新接口TaskData应该实现该接口
 export interface TaskParams {
-	id: number; //任务ID
-	parent_id?: number; //父任务ID
+	id: string; //任务ID
+	parent_id?: string; //父任务ID
 	issuer: string; //下发人
 	responser: string; //责任人
 	priority: Priority;
@@ -16,7 +16,7 @@ export interface TaskParams {
 	discription: string; //任务描述
 	content: string; //任务内容
 	node: Date;
-	sub_id?: number; //子任务ID
+	sub_id?: string; //子任务ID
 }
 
 export interface UserParams {

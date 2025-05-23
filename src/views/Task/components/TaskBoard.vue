@@ -1,11 +1,14 @@
 <script setup lang="ts">
-import { ElButton, ElRow } from "element-plus";
+import { ElAside, ElContainer, ElHeader, ElMain, ElRow } from "element-plus";
 import { onMounted, ref } from "vue";
+import type { TabsInstance } from "element-plus";
 import { STATUS_LIST } from "../types/task";
 import AddTaskCard from "./AddTaskCard.vue";
 import fetchdata from "./fetchdata.vue";
 import Task from "./TaskCard.vue";
 import type { Status, TaskParams } from "../types/task";
+
+const tabPosition = ref<TabsInstance["tabPosition"]>("left");
 
 //获取子组件实例
 const childRef = ref<InstanceType<typeof fetchdata> | null>(null);
@@ -101,24 +104,44 @@ function handleData(previousState: Status, targetState: Status, index: number) {
 
 <template>
 	<div>
-		<ElRow>
-			<ElButton> 新建任务 </ElButton>
-		</ElRow>
-		<ElRow class="row-bg" justify="space-evenly">
-			<ElCol v-for="item in STATUS_LIST" :key="item" :span="6" gutter="20">
-				<div class="column-header">{{ titleMap[item] }}</div>
-				<div v-for="(data, index) in taskDataMap[item].value" :key="index">
-					<Task
-						:task-data="data"
-						:status="item"
-						@status-changed="(targetState) => handleData(item, targetState, index)"
-					/>
-				</div>
-				<div v-if="titleMap[item] === '待办'">
-					<AddTaskCard />
-				</div>
-			</ElCol>
-		</ElRow>
+		<div class="common-layout">
+			<el-tabs :tab-position="tabPosition" style="height: 200px" class="demo-tabs">
+				<el-tab-pane label="User">User</el-tab-pane>
+				<el-tab-pane label="Config">Config</el-tab-pane>
+				<el-tab-pane label="Role">Role</el-tab-pane>
+				<el-tab-pane label="Task">Task</el-tab-pane>
+			</el-tabs>
+			<ElContainer class="layout-container-demo">
+				<ElAside width="200px">Aside</ElAside>
+				<ElContainer>
+					<ElHeader style="height: auto">
+						<ElRow class="row-bg" justify="space-evenly">
+							<ElCol v-for="item in STATUS_LIST" :key="item" :span="6" gutter="20">
+								<div class="column-header">{{ titleMap[item] }}</div>
+							</ElCol>
+						</ElRow>
+					</ElHeader>
+					<ElMain style="padding-top: 2px">
+						<ElRow class="row-bg" justify="space-evenly">
+							<ElCol v-for="item in STATUS_LIST" :key="item" :span="6" gutter="20">
+								<div v-for="(data, index) in taskDataMap[item].value" :key="index">
+									<Task
+										:task-data="data"
+										:status="item"
+										@status-changed="
+											(targetState) => handleData(item, targetState, index)
+										"
+									/>
+								</div>
+								<div v-if="titleMap[item] === '待办'">
+									<AddTaskCard />
+								</div>
+							</ElCol>
+						</ElRow>
+					</ElMain>
+				</ElContainer>
+			</ElContainer>
+		</div>
 		<fetchdata ref="childRef" @submit-form="loadData" />
 	</div>
 </template>
@@ -130,5 +153,22 @@ function handleData(previousState: Status, targetState: Status, index: number) {
 	font-size: 1rem; /* 12px，相当于 text-xs */
 	text-transform: uppercase;
 	text-align: center;
+	align-items: center;
+}
+.layout-container-demo .el-aside {
+	color: var(--el-text-color-primary);
+	background: var(--el-color-primary-light-8);
+}
+
+.demo-tabs > .el-tabs__content {
+	padding: 32px;
+	color: #6b778c;
+	font-size: 32px;
+	font-weight: 600;
+}
+
+.el-tabs--right .el-tabs__content,
+.el-tabs--left .el-tabs__content {
+	height: 100%;
 }
 </style>

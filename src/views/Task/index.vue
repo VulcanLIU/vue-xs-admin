@@ -6,9 +6,15 @@ defineOptions({
 </script>
 
 <template>
-	<div>
-		<TaskBoard />
+	<div class="no-padding-card">
+		<ElCard class="no-padding-card">
+			<TaskBoard />
+		</ElCard>
 	</div>
 </template>
 
-<style></style>
+<style scoped>
+.no-padding-card .el-card__body {
+	padding: 0 !important;
+}
+</style>

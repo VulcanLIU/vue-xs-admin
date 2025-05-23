@@ -9,13 +9,20 @@ import {
 	ElSelect,
 } from "element-plus";
 import { computed, reactive, ref } from "vue";
+import Todo from "wangeditor/dist/menus/todo";
 import { useUserInfoStoreHook } from "@/store/modules/user";
-import { labelMap, STATUS_LIST, statusMap } from "../types/task";
+import { labelMap } from "../types/task";
+
+import fetchdata from "./fetchdata.vue";
+import type { TaskParams } from "../types/task";
 
 //定义信号
 const emit = defineEmits<{
-	submited: [issubmited: boolean];
+	submited: [issubmited: boolean, from: TaskParams];
 }>();
+
+//获取子组件实例
+const childRef = ref<InstanceType<typeof fetchdata> | null>(null);
 
 const userInfoStore = useUserInfoStoreHook();
 
@@ -64,10 +71,24 @@ const submitForm = async () => {
 	await ruleFormRef.value?.validate();
 	// 这里可以emit或调用API
 	ElMessage.success(`任务已创建，任务ID：${taskId.value}`);
-
+	const taskData = transformData(ruleForm);
+	await childRef.value?.upsertTaskInfo(taskData);
 	//告诉AddTaskCard。已经完成提交
-	emit("submited", true);
+	emit("submited", true, taskData);
 };
+
+function transformData(formData: any): TaskParams {
+	return {
+		id: taskId.value,
+		issuer: formData.issuer,
+		responser: formData.responser,
+		discription: formData.discription,
+		priority: formData.priority,
+		node: formData.node,
+		content: formData.content,
+		status: "Todo",
+	};
+}
 </script>
 
 <template>
@@ -79,7 +100,6 @@ const submitForm = async () => {
 		label-width="auto"
 	>
 		<ElFormItem label="任务ID">
-			<!-- <el-text class="mx-1">{{ taskId }}</el-text> -->
 			<ElInput :model-value="taskId" readonly />
 		</ElFormItem>
 		<ElFormItem label="任务下发人" prop="issuer">
@@ -122,4 +142,5 @@ const submitForm = async () => {
 			<ElButton type="primary" @click="submitForm">提交</ElButton>
 		</ElFormItem>
 	</ElForm>
+	<fetchdata ref="childRef" />
 </template>

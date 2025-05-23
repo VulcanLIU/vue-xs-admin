@@ -129,10 +129,6 @@ const adminPermissionRouter = [
 		name: "RtNested",
 		children: [
 			{
-				path: "myecharts",
-				name: "RtMyEcharts",
-			},
-			{
 				path: "menu1",
 				name: "RtMenu1",
 				children: [

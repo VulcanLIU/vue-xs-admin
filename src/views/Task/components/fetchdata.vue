@@ -36,7 +36,17 @@ const FetchData = async (task_data: TaskParams[]) => {
 	emit("submitForm");
 };
 
-defineExpose({ FetchData });
+const upsertTaskInfo = async (task_data: TaskParams) => {
+	deffHttp.post<TaskParams>(
+		{
+			url: "http://localhost:5000/api/upsertTaskInfo",
+			data: task_data,
+		},
+		{ errorMessageMode: "modal", withToken: false },
+	);
+};
+
+defineExpose({ FetchData, upsertTaskInfo });
 </script>
 
 <template>
