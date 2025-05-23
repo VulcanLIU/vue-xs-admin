@@ -1,41 +1,44 @@
 <script lang="ts" setup>
-  import { useUserInfoStoreHook } from '@/store/modules/user';
-  import { deffHttp } from '@/utils/axios';
-  import { ref } from 'vue';
-  import type { TaskParams, UserParams } from '../types/task';
+import { ref } from "vue";
+import { useUserInfoStoreHook } from "@/store/modules/user";
+import { deffHttp } from "@/utils/axios";
+import type { TaskParams, UserParams } from "../types/task";
 
-  const emit = defineEmits<{
-    (e: 'submitForm'): boolean;
-  }>();
+const emit = defineEmits<{
+	(e: "submitForm"): boolean;
+}>();
 
-  const userInfoStore = useUserInfoStoreHook();
+const userInfoStore = useUserInfoStoreHook();
 
-  //获取数据信息-实际与后端通信的API
-  const getTaskInfo = (user: string, id: number) =>
-    deffHttp.post<TaskParams, UserParams>(
-      {
-        url: 'http://localhost:5000/api/getTaskInfo',
-        data: { username: user, userid: id },
-      },
-      { errorMessageMode: 'modal', withToken: false },
-    );
+//获取数据信息-实际与后端通信的API
+const getTaskInfo = (user: string, id: number) =>
+	deffHttp.post<TaskParams, UserParams>(
+		{
+			url: "http://localhost:5000/api/getTaskInfo",
+			data: { username: user, userid: id },
+		},
+		{ errorMessageMode: "modal", withToken: false },
+	);
 
-  //拉取数据
-  const FetchData = async (task_data: TaskParams[]) => {
-    const res = await getTaskInfo(userInfoStore.userInfo?.name, userInfoStore.userInfo?.userid);
-    console.log(res.data);
-    res.data.forEach(element => {
-      task_data.push(element);
-    });
+//拉取数据
+const FetchData = async (task_data: TaskParams[]) => {
+	const res = await getTaskInfo(
+		userInfoStore.userInfo?.name,
+		userInfoStore.userInfo?.userid,
+	);
+	console.log(res.data);
+	res.data.forEach((element) => {
+		task_data.push(element);
+	});
 
-    console.log(task_data);
+	console.log(task_data);
 
-    emit('submitForm');
-  };
+	emit("submitForm");
+};
 
-  defineExpose({ FetchData });
+defineExpose({ FetchData });
 </script>
 
 <template>
-  <div />
+	<div />
 </template>

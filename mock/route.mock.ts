@@ -16,6 +16,10 @@ const power = [
 		name: "RtTask",
 	},
 	{
+		path: "/task2",
+		name: "RtTask2",
+	},
+	{
 		path: "/hello",
 		name: "RtHello",
 	},
@@ -24,8 +28,8 @@ const power = [
 		name: "RtStatus",
 		children: [
 			{
-				path: "form",
-				name: "RtForm",
+				path: "myecharts",
+				name: "RtMyEcharts",
 			},
 		],
 	},
@@ -124,6 +128,10 @@ const adminPermissionRouter = [
 		path: "/nested",
 		name: "RtNested",
 		children: [
+			{
+				path: "myecharts",
+				name: "RtMyEcharts",
+			},
 			{
 				path: "menu1",
 				name: "RtMenu1",
