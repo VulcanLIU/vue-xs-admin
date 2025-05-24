@@ -9,7 +9,7 @@ const taskPage: Array<AppRouteRecordRaw> = [
 		name: "RtTask",
 		meta: {
 			title: "任务管理",
-			icon: "iEL-home-filled",
+			icon: "iEL-message-box",
 			position: 2,
 		},
 		children: [

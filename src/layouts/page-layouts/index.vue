@@ -3,6 +3,7 @@ import AppMain from "./components/AppMain/index.vue";
 import AppTabs from "./components/AppTabs/index.vue";
 import NavBart from "./components/Navbart/index.vue";
 import SideNavigationBar from "./components/SideNavigationBar/index.vue";
+import UserCenter from "./components/UserCenter/index.vue";
 </script>
 
 <template>
@@ -18,5 +19,6 @@ import SideNavigationBar from "./components/SideNavigationBar/index.vue";
 			<!-- 内容区 -->
 			<AppMain />
 		</div>
+		<UserCenter />
 	</div>
 </template>
