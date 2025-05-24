@@ -17,7 +17,7 @@ export interface TaskParams {
 	discription: string; //任务描述
 	content: string; //任务内容
 	node: Date;
-	is_archived: boolean; //是否归档
+	is_archived: number; //是否归档 0:否 其他数字:是
 	sub_id?: string; //子任务ID
 }
 

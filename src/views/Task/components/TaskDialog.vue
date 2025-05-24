@@ -8,9 +8,9 @@ import {
 	User,
 } from "@element-plus/icons-vue";
 import { type ComponentSize, ElSlider } from "element-plus";
-import { computed, defineEmits, PropType, reactive, ref } from "vue";
+import { computed, defineEmits, onMounted, PropType, reactive, ref } from "vue";
 import { labelMap, STATUS_LIST, statusMap } from "../types/task";
-import type { TaskParams } from "../types/task";
+import type { Status, TaskParams } from "../types/task";
 //定义组件属性
 //|-需传入绑定在ELcard上的用户信息
 const props = defineProps({
@@ -37,8 +37,8 @@ const iconStyle = computed(() => {
 });
 
 //滑块组件中的数值
-const value2 = ref(0);
-//|-创建滑块中的数值与任务状态之间的映射
+const sliderValue = ref(0);
+//|-创建滑块中的数值与任务状态之间的映射 0-待办 1-进行中 2-暂停 3-完成
 type Marks = Record<number, string>;
 const marks = reactive<Marks>({
 	0: statusMap[STATUS_LIST[0]],
@@ -47,14 +47,24 @@ const marks = reactive<Marks>({
 	3: statusMap[STATUS_LIST[3]],
 });
 function MapValue2Status(): string {
-	console.log(value2.value);
-	console.log(STATUS_LIST[value2.value]);
-	console.log(statusMap[STATUS_LIST[value2.value]]);
-	return STATUS_LIST[value2.value];
+	console.log(sliderValue.value);
+	console.log(STATUS_LIST[sliderValue.value]);
+	console.log(statusMap[STATUS_LIST[sliderValue.value]]);
+	return STATUS_LIST[sliderValue.value];
 }
+
+function MapStatus2Value(status: Status): number {
+	return STATUS_LIST.indexOf(status);
+}
+
 function status_changed() {
-	emit("sendStatus", STATUS_LIST[value2.value]);
+	MapStatus2Value("Todo");
+	emit("sendStatus", STATUS_LIST[sliderValue.value]);
 }
+
+onMounted(() => {
+	sliderValue.value = MapStatus2Value(props.taskData.status);
+});
 </script>
 
 <template>
@@ -144,7 +154,7 @@ function status_changed() {
 		<div class="slider-demo-block">
 			<span class="demonstration">进度</span>
 			<ElSlider
-				v-model="value2"
+				v-model="sliderValue"
 				:step="1"
 				show-stops
 				:format-tooltip="MapValue2Status"

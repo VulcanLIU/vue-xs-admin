@@ -20,15 +20,17 @@ const centerDialogVisible = ref(false);
 			</div>
 		</ElCard>
 		<ElDialog v-model="centerDialogVisible">
-			<AddTaskForm
-				@submited="
-					(issubmited) => {
-						if (issubmited) {
-							centerDialogVisible = false;
+			<div class="dialog">
+				<AddTaskForm
+					@submited="
+						(issubmited) => {
+							if (issubmited) {
+								centerDialogVisible = false;
+							}
 						}
-					}
-				"
-			/>
+					"
+				/>
+			</div>
 		</ElDialog>
 	</div>
 </template>
@@ -38,6 +40,11 @@ const centerDialogVisible = ref(false);
 	min-height: 2px;
 }
 
+.dialog {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
 .handle {
 	cursor: move;
 }

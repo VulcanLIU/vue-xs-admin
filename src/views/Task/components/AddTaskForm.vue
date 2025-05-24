@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {
 	ElButton,
+	ElDatePicker,
 	ElForm,
 	ElFormItem,
 	ElInput,
@@ -94,7 +95,7 @@ function transformData(formData: any): TaskParams {
 <template>
 	<ElForm
 		ref="ruleFormRef"
-		style="max-width: 600px"
+		style="width: 600px"
 		:model="ruleForm"
 		:rules="rules"
 		label-width="auto"
@@ -124,12 +125,14 @@ function transformData(formData: any): TaskParams {
 					:value="item.value"
 				/>
 			</ElSelect>
-			<!-- <ElTag :type="labelMap[ruleForm.priority].type" style="margin-left: 10px">
-				{{ labelMap[ruleForm.priority].label }}
-			</ElTag> -->
 		</ElFormItem>
 		<ElFormItem label="任务节点" prop="node">
-			<ElInput v-model="ruleForm.node" placeholder="请输入任务节点" />
+			<ElDatePicker
+				v-model="ruleForm.node"
+				type="date"
+				placeholder="请选择任务节点日期"
+				style="width: 100%"
+			/>
 		</ElFormItem>
 		<ElFormItem label="任务内容" prop="content">
 			<ElInput
@@ -138,9 +141,13 @@ function transformData(formData: any): TaskParams {
 				placeholder="请输入任务内容"
 			/>
 		</ElFormItem>
-		<ElFormItem>
-			<ElButton type="primary" @click="submitForm">提交</ElButton>
-		</ElFormItem>
+		<div style="display: flex; align-items: center; justify-content: center">
+			<ElFormItem>
+				<ElButton style="width: 100px" type="primary" @click="submitForm">
+					提交
+				</ElButton>
+			</ElFormItem>
+		</div>
 	</ElForm>
-	<fetchdata ref="childRef" :type="我下发的任务" />
+	<fetchdata ref="childRef" type="我下发的任务" />
 </template>

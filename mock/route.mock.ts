@@ -43,79 +43,79 @@ const power = [
 			},
 		],
 	},
-	{
-		path: "/components",
-		name: "RtComponents",
-		children: [
-			{
-				path: "form",
-				name: "RtForm",
-			},
-			{
-				path: "table",
-				name: "RtTable",
-			},
-			{
-				path: "drag",
-				name: "RtDrag",
-			},
-			{
-				path: "count-to",
-				name: "RtCountTo",
-			},
-			{
-				path: "seamless-scroll",
-				name: "RtSeamlessScroll",
-			},
-			{
-				path: "date-time",
-				name: "DateTime",
-				children: [
-					{
-						path: "date-select",
-						name: "RtDate",
-					},
-					{
-						path: "calendar",
-						name: "RtCalendar",
-					},
-				],
-			},
-		],
-	},
-	{
-		path: "/echarts",
-		name: "RtEcharts",
+	// {
+	// 	path: "/components",
+	// 	name: "RtComponents",
+	// 	children: [
+	// 		{
+	// 			path: "form",
+	// 			name: "RtForm",
+	// 		},
+	// 		{
+	// 			path: "table",
+	// 			name: "RtTable",
+	// 		},
+	// 		{
+	// 			path: "drag",
+	// 			name: "RtDrag",
+	// 		},
+	// 		{
+	// 			path: "count-to",
+	// 			name: "RtCountTo",
+	// 		},
+	// 		{
+	// 			path: "seamless-scroll",
+	// 			name: "RtSeamlessScroll",
+	// 		},
+	// 		{
+	// 			path: "date-time",
+	// 			name: "DateTime",
+	// 			children: [
+	// 				{
+	// 					path: "date-select",
+	// 					name: "RtDate",
+	// 				},
+	// 				{
+	// 					path: "calendar",
+	// 					name: "RtCalendar",
+	// 				},
+	// 			],
+	// 		},
+	// 	],
+	// },
+	// {
+	// 	path: "/echarts",
+	// 	name: "RtEcharts",
 
-		children: [
-			{
-				path: "bar",
-				name: "RtBar",
-			},
-			{
-				path: "map",
-				name: "RtMap",
-			},
-		],
-	},
-	{
-		path: "/editor",
-		name: "RtEditor",
-		children: [
-			{
-				path: "rich-text",
-				name: "RtRichText",
-			},
-			{
-				path: "markdown",
-				name: "RtMarkdown",
-			},
-			{
-				path: "logic-flow",
-				name: "RtLogicFlow",
-			},
-		],
-	},
+	// 	children: [
+	// 		{
+	// 			path: "bar",
+	// 			name: "RtBar",
+	// 		},
+	// 		{
+	// 			path: "map",
+	// 			name: "RtMap",
+	// 		},
+	// 	],
+	// },
+	// {
+	// 	path: "/editor",
+	// 	name: "RtEditor",
+	// 	children: [
+	// 		{
+	// 			path: "rich-text",
+	// 			name: "RtRichText",
+	// 		},
+	// 		{
+	// 			path: "markdown",
+	// 			name: "RtMarkdown",
+	// 		},
+	// 		{
+	// 			path: "logic-flow",
+	// 			name: "RtLogicFlow",
+	// 		},
+	// 	],
+	// },
 ];
 
 //管理员额外权限路由

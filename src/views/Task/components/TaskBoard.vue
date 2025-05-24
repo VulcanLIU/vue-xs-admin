@@ -14,7 +14,7 @@ import type { TabsInstance } from "element-plus";
 import { STATUS_LIST, TaskCategory } from "../types/task";
 import AddTaskCard from "./AddTaskCard.vue";
 import fetchdata from "./fetchdata.vue";
-import Task from "./TaskCard.vue";
+import TaskCard from "./TaskCard.vue";
 import type { Status, TaskParams } from "../types/task";
 
 const props = defineProps<{
@@ -143,6 +143,9 @@ function handleData(previousState: Status, targetState: Status, index: number) {
 	tt.status = targetState;
 	taskDataMap[previousState].value.splice(index, 1); //删除来源数组中的任务
 	taskDataMap[targetState].value.push(tt);
+
+	//对数据库中的相应条目进行更新
+	childRef.value?.updateTaskInfo(tt);
 }
 </script>
 
@@ -165,7 +168,7 @@ function handleData(previousState: Status, targetState: Status, index: number) {
 						<ElCol v-for="item in STATUS_LIST" :key="item" :span="6" gutter="20">
 							<div v-if="categoryItem.category === props.type">
 								<div v-for="(data, index) in taskDataMap[item].value" :key="index">
-									<Task
+									<TaskCard
 										:task-data="data"
 										:status="item"
 										@status-changed="
@@ -184,7 +187,7 @@ function handleData(previousState: Status, targetState: Status, index: number) {
 									)"
 									:key="index"
 								>
-									<Task
+									<TaskCard
 										:task-data="data"
 										:status="item"
 										@status-changed="
