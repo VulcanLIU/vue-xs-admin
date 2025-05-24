@@ -14,6 +14,16 @@ const power = [
 	{
 		path: "/task",
 		name: "RtTask",
+		children: [
+			{
+				path: "taskIssued",
+				name: "RtTaskIssued",
+			},
+			{
+				path: "taskDelegated",
+				name: "RtTaskDelegated",
+			},
+		],
 	},
 	{
 		path: "/task2",

@@ -5,17 +5,19 @@ export type Priority = (typeof PRIORITY_LIST)[number];
 export const STATUS_LIST = ["Todo", "Doing", "Stopped", "Done"] as const;
 export type Status = (typeof STATUS_LIST)[number];
 
-//接口-新接口TaskData应该实现该接口
+//接口-数据库中字段需与此一致
 export interface TaskParams {
 	id: string; //任务ID
 	parent_id?: string; //父任务ID
 	issuer: string; //下发人
 	responser: string; //责任人
-	priority: Priority;
+	priority: Priority; //任务优先级
+	category: string; //任务分类
 	status: Status; //任务状态
 	discription: string; //任务描述
 	content: string; //任务内容
 	node: Date;
+	is_archived: boolean; //是否归档
 	sub_id?: string; //子任务ID
 }
 
@@ -27,6 +29,12 @@ export interface UserParams {
 export interface Item {
 	type: TagProps["type"];
 	label: string;
+}
+
+//任务分类
+export interface TaskCategory {
+	category: string;
+	children: TaskParams[];
 }
 
 export const labelMap: Record<Priority, Item> = {

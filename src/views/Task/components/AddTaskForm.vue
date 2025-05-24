@@ -142,5 +142,5 @@ function transformData(formData: any): TaskParams {
 			<ElButton type="primary" @click="submitForm">提交</ElButton>
 		</ElFormItem>
 	</ElForm>
-	<fetchdata ref="childRef" />
+	<fetchdata ref="childRef" :type="我下发的任务" />
 </template>

@@ -1,12 +1,25 @@
 <script setup lang="ts">
-import { ElAside, ElContainer, ElHeader, ElMain, ElRow } from "element-plus";
+import {
+	ElAside,
+	ElContainer,
+	ElHeader,
+	ElMain,
+	ElRow,
+	ElTabPane,
+	ElTabs,
+} from "element-plus";
+import { forEach } from "lodash-es";
 import { onMounted, ref } from "vue";
 import type { TabsInstance } from "element-plus";
-import { STATUS_LIST } from "../types/task";
+import { STATUS_LIST, TaskCategory } from "../types/task";
 import AddTaskCard from "./AddTaskCard.vue";
 import fetchdata from "./fetchdata.vue";
 import Task from "./TaskCard.vue";
 import type { Status, TaskParams } from "../types/task";
+
+const props = defineProps<{
+	type: String;
+}>();
 
 const tabPosition = ref<TabsInstance["tabPosition"]>("left");
 
@@ -19,6 +32,9 @@ const titleMap: Record<Status, string> = {
 	Done: "完成",
 	Stopped: "暂停",
 };
+
+//经过任务分类后的任务数据
+const taskCategoryList = ref<TaskCategory[]>([]);
 
 //任务数据
 const TaskData2 = ref<TaskParams[]>([]);
@@ -40,17 +56,45 @@ function sortByStatus(raw: TaskParams[], target: Status) {
 	return raw.filter((i) => i.status === target);
 }
 
+function getCategoryList(raw: TaskParams[]) {
+	//获取所有的category
+	const _categoryList = raw.map((item) => item.category);
+
+	//对category进行去重
+	const categoryList = [...new Set(_categoryList)];
+
+	//根据category数量生成数组
+	//|- 如果 taskCategoryList 不为空，则清空
+	if (taskCategoryList.value.length > 0) {
+		taskCategoryList.value = [];
+	}
+
+	//|-先填入我的待办任务、我下发的任务
+	taskCategoryList.value.push({
+		category: props.type,
+		children: raw,
+	});
+	//|-填充分类后的任务
+	categoryList.forEach((categoryItem) => {
+		taskCategoryList.value.push({
+			category: categoryItem,
+			children: raw.filter((i) => i.category === categoryItem),
+		});
+	});
+}
 //子组件完成数据获取后完成此回调函数
 function loadData() {
 	//
 	for (const status of STATUS_LIST) {
 		taskDataMap[status].value = sortByStatus(TaskData2.value, status);
 	}
+	getCategoryList(TaskData2.value);
 }
 
 onMounted(() => {
 	//拉取数据-该用户的任务数据
 	FetchData(TaskData2.value);
+	console.log(props);
 });
 
 //调用子组件函数获取数据
@@ -105,25 +149,21 @@ function handleData(previousState: Status, targetState: Status, index: number) {
 <template>
 	<div>
 		<div class="common-layout">
-			<el-tabs :tab-position="tabPosition" style="height: 200px" class="demo-tabs">
-				<el-tab-pane label="User">User</el-tab-pane>
-				<el-tab-pane label="Config">Config</el-tab-pane>
-				<el-tab-pane label="Role">Role</el-tab-pane>
-				<el-tab-pane label="Task">Task</el-tab-pane>
-			</el-tabs>
-			<ElContainer class="layout-container-demo">
-				<ElAside width="200px">Aside</ElAside>
-				<ElContainer>
-					<ElHeader style="height: auto">
-						<ElRow class="row-bg" justify="space-evenly">
-							<ElCol v-for="item in STATUS_LIST" :key="item" :span="6" gutter="20">
-								<div class="column-header">{{ titleMap[item] }}</div>
-							</ElCol>
-						</ElRow>
-					</ElHeader>
-					<ElMain style="padding-top: 2px">
-						<ElRow class="row-bg" justify="space-evenly">
-							<ElCol v-for="item in STATUS_LIST" :key="item" :span="6" gutter="20">
+			<!-- 由taskCategoryList的category字段生成ElTabs -->
+			<ElTabs tab-position="left">
+				<ElTabPane
+					v-for="(categoryItem, index) in taskCategoryList"
+					:key="index"
+					:label="categoryItem.category"
+				>
+					<ElRow class="row-bg" justify="space-evenly">
+						<ElCol v-for="item in STATUS_LIST" :key="item" :span="6" gutter="20">
+							<div class="column-header">{{ titleMap[item] }}</div>
+						</ElCol>
+					</ElRow>
+					<ElRow class="row-bg" justify="space-evenly">
+						<ElCol v-for="item in STATUS_LIST" :key="item" :span="6" gutter="20">
+							<div v-if="categoryItem.category === props.type">
 								<div v-for="(data, index) in taskDataMap[item].value" :key="index">
 									<Task
 										:task-data="data"
@@ -136,13 +176,32 @@ function handleData(previousState: Status, targetState: Status, index: number) {
 								<div v-if="titleMap[item] === '待办'">
 									<AddTaskCard />
 								</div>
-							</ElCol>
-						</ElRow>
-					</ElMain>
-				</ElContainer>
-			</ElContainer>
+							</div>
+							<div v-else>
+								<div
+									v-for="(data, index) in taskDataMap[item].value.filter(
+										(i) => i.category === categoryItem.category,
+									)"
+									:key="index"
+								>
+									<Task
+										:task-data="data"
+										:status="item"
+										@status-changed="
+											(targetState) => handleData(item, targetState, index)
+										"
+									/>
+								</div>
+								<div v-if="titleMap[item] === '待办'">
+									<AddTaskCard />
+								</div>
+							</div>
+						</ElCol>
+					</ElRow>
+				</ElTabPane>
+			</ElTabs>
 		</div>
-		<fetchdata ref="childRef" @submit-form="loadData" />
+		<fetchdata ref="childRef" :type="props.type" @submit-form="loadData" />
 	</div>
 </template>
 
